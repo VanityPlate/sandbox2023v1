@@ -8,7 +8,7 @@
  */
 define(['N/record'],
     
-    (record) => {
+    (ssrecord) => {
         /**
          * Defines the Mass Update trigger point.
          * @param {Object} params
@@ -42,7 +42,7 @@ define(['N/record'],
                 //Array of New Lines
                 let linesToAdd = [];
 
-                let record = record.load({type: params.type, id: params.id, isDynamic: true});
+                let record = ssrecord.load({type: params.type, id: params.id, isDynamic: true});
 
                 for(let x = 0; x < record.getLineCount({sublistId: 'item'}); x++){
                     let quantity = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'quantity'});
