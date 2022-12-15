@@ -53,16 +53,12 @@ define(['N/record'],
                     if(amount > 0 && billed < quantity) {
                         if (shipped > 0 && hasPO != "DropShip") {
                             linesToAdd.push(holdInfo(record, x, quantity, shipped));
-                            record.selectLine({sublistId: 'item', line: x});
-                            record.setCurrentSublistValue({sublistId: 'item', fieldId: 'quantity', value: shipped});
-                            record.commitLine({sublistId: 'item'});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: shipped, line: x});
                         }
                         else{
-                            record.selectLine({sublistId: 'item', line: x});
                             let costing = record.getCurrentSublistValue({sublistId: 'item', fieldId: 'price'});
-                            record.setCurrentSublistValue({sublistId: 'item', fieldId: 'price', value: 1});
-                            record.setCurrentSublistValue({sublistId: 'item', fieldId: 'price', costing});
-                            record.commitLine({sublistId: 'item'});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'price', value: 1, line: x});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'price', costing, line: x});
                         }
                     }
                 }
