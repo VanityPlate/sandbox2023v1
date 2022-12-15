@@ -60,7 +60,7 @@ define(['N/record'],
                         else{
                             record.selectLine({sublistId: 'item', line: x});
                             let costing = record.getCurrentSublistValue({sublistId: 'item', fieldId: 'price'});
-                            record.setCurrentSublistValue({sublistId: 'item', fieldId: 'price', value: 0});
+                            record.setCurrentSublistValue({sublistId: 'item', fieldId: 'price', value: 1});
                             record.setCurrentSublistValue({sublistId: 'item', fieldId: 'price', costing});
                             record.commitLine({sublistId: 'item'});
                         }
