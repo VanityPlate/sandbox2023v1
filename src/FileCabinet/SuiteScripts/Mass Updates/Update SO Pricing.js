@@ -56,7 +56,7 @@ define(['N/record'],
                             record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: shipped, line: x});
                         }
                         else{
-                            let costing = record.getCurrentSublistValue({sublistId: 'item', fieldId: 'price'});
+                            let costing = record.getSublistValue({sublistId: 'item', fieldId: 'price', line: x});
                             record.setSublistValue({sublistId: 'item', fieldId: 'price', value: 1, line: x});
                             record.setSublistValue({sublistId: 'item', fieldId: 'price', costing, line: x});}
                     }
