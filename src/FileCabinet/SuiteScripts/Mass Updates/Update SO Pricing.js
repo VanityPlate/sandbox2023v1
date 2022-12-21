@@ -8,7 +8,7 @@
  */
 define(['N/record', 'N/search'],
     
-    (ssrecord) => {
+    (ssrecord, search) => {
         /**
          * Defines the Mass Update trigger point.
          * @param {Object} params
