@@ -33,7 +33,7 @@ define(['N/record', 'N/search'],
                             id: price,
                             columns: ['discountpct']
                         }).discountpct;
-                        discount = discount ? 100.0 + Number(discount.replace('%', '')) : 0;
+                        discount = discount ? (100.0 + Number(discount.replace('%', ''))) / 100 : 0;
                         return {
                             price: price,
                             item: item,
