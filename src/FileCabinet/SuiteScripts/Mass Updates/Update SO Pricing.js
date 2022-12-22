@@ -27,12 +27,13 @@ define(['N/record', 'N/search'],
                         let hasPO = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'createpo'});
                         let price = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'price'});
                         let item = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'item'});
-                        let retail = search.lookupFields({type: search.Type.ITEM, id: item, columns: ['baseprice']});
+                        let retail = search.lookupFields({type: search.Type.ITEM, id: item, columns: ['baseprice']}).baseprice;
                         let discount = search.lookupFields({
                             type: search.Type.PRICE_LEVEL,
                             id: price,
                             columns: ['discountpct']
-                        });
+                        }).discountpct;
+                        discount = discount ? 100.0 + Number(discount.replace('%', '')) : 0;
                         return {
                             price: price,
                             item: item,
@@ -40,8 +41,8 @@ define(['N/record', 'N/search'],
                             billed: billed,
                             amount: amount,
                             hasPO: hasPO,
-                            retail: retail.baseprice,
-                            discount: discount.discountpct ? 100.0 + Number(discount.discountpct.replace('%', '')) : 0,
+                            retail: retail,
+                            discount: discount,
                             updatedRate: this.retail * this.discount
                         };
                     }
