@@ -61,6 +61,7 @@ define(['N/record', 'N/search'],
                         //Refactor Testing
                         log.audit({title: 'Base Price', details: JSON.stringify(collection.retail)});
                         log.audit({title: 'discount', details: JSON.stringify(collection.discount)});
+                        log.audit({title: 'updatedRate', details: JSON.stringify(collection.updatedRate)});
                         if (shipped > 0 && collection.hasPO != "DropShip") {
                             linesToAdd.push(collection);
                             //Refactor Testing
