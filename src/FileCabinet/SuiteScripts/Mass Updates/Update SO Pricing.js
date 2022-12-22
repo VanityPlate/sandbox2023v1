@@ -43,7 +43,7 @@ define(['N/record', 'N/search'],
                             hasPO: hasPO,
                             retail: retail,
                             discount: discount,
-                            updatedRate: this.retail * this.discount
+                            updatedRate: retail * discount
                         };
                     }
                     return null;
