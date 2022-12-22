@@ -41,7 +41,7 @@ define(['N/record', 'N/search'],
                             amount: amount,
                             hasPO: hasPO,
                             retail: retail.baseprice,
-                            discount: 100 - discount.discountpct.replace('%', ''),
+                            discount: discount.discountpct ? 100 + discount.discountpct.replace('%', '') : '',
                             updatedRate: this.retail * this.discount
                         };
                     }
