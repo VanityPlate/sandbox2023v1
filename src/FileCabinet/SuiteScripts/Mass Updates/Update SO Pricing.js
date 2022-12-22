@@ -72,22 +72,21 @@ define(['N/record', 'N/search'],
                             record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: collection.retail, line: x});
                         }
                     }
-
-                    if (linesToAdd.length > 0) {
-                        for (let x = 0; x < linesToAdd.length; x++) {
-                            let nextLine = record.getLineCount({sublistId: 'item'});
-                            record.setSublistValue({sublistId: 'item', fieldId: 'item', value: linesToAdd[x].item, line: nextLine});
-                            record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: linesToAdd[x].quantity, line: nextLine});
-                            record.setSublistValue({sublistId: 'item', fieldId: 'price', value: linesToAdd[x].price, line: nextLine});
-                            record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: collection.updatedRate, line: nextLine});
-                            record.setSublistValue({sublistId: 'item', fieldId: 'amount', value: (collection.updatedRate * collection.quantity), line: nextLine});
-                            record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: collection.retail, line: nextLine});
-                        }
-                    }
-
-                    //Refactor Testing
-                    //record.save();
                 }
+                if (linesToAdd.length > 0) {
+                    for (let x = 0; x < linesToAdd.length; x++) {
+                        let nextLine = record.getLineCount({sublistId: 'item'});
+                        record.setSublistValue({sublistId: 'item', fieldId: 'item', value: linesToAdd[x].item, line: nextLine});
+                        record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: linesToAdd[x].quantity, line: nextLine});
+                        record.setSublistValue({sublistId: 'item', fieldId: 'price', value: linesToAdd[x].price, line: nextLine});
+                        record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: collection.updatedRate, line: nextLine});
+                        record.setSublistValue({sublistId: 'item', fieldId: 'amount', value: (collection.updatedRate * collection.quantity), line: nextLine});
+                        record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: collection.retail, line: nextLine});
+                    }
+                }
+
+                //Refactor Testing
+                //record.save();
             }
             catch (e) {
                 log.error({title: 'Critical error in each', details: e});
