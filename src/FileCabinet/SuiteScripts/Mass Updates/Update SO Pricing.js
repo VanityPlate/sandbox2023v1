@@ -22,18 +22,27 @@ define(['N/record', 'N/search'],
                 //Creates object saving line item data for splitting
                 let holdInfo = (record, line, quantity = null, shipped = null) => {
                     if(quantity != null && shipped != null) {
+                        let billed = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'quantitybilled'});
+                        let amount = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'amount'});
+                        let hasPO = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'createpo'});
+                        let price = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'price'});
+                        let item = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'item'});
+                        let retail = search.lookupFields({type: search.Type.ITEM, id: item, columns: ['baseprice']});
+                        let discount = search.lookupFields({
+                            type: search.Type.PRICE_LEVEL,
+                            id: price,
+                            columns: ['discountpct']
+                        });
                         return {
-                            currentPriceLevel: record.getSublistValue({
-                                fieldId: 'price',
-                                line: line,
-                                sublistId: 'item'
-                            }),
-                            item: record.getLineCount({
-                                fieldId: 'item',
-                                line: line,
-                                sublistId: 'item'
-                            }),
-                            quantity: quantity - shipped
+                            price: price,
+                            item: item,
+                            quantity: quantity - shipped,
+                            billed: billed,
+                            amount: amount,
+                            hasPO: hasPO,
+                            retail: retail.baseprice,
+                            discount: 100 - discount.discountpct.STRING.replace('%', ''),
+                            updatedRate: this.retail * this.discount
                         };
                     }
                     return null;
@@ -47,30 +56,20 @@ define(['N/record', 'N/search'],
                 for(let x = 0; x < record.getLineCount({sublistId: 'item'}); x++) {
                     let quantity = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'quantity'});
                     let shipped = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'quantitypickpackship'});
-                    let billed = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'quantitybilled'});
-                    let amount = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'amount'});
-                    let hasPO = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'createpo'});
-                    let price = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'price'});
-                    let item = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'item'});
-                    let retail = search.lookupFields({type: search.Type.ITEM, id: item, columns: ['baseprice']});
-                    let discount = search.lookupFields({
-                        type: search.Type.PRICE_LEVEL,
-                        id: price,
-                        columns: ['discountpct']
-                    });
-                    //Refactor Testing
-                    log.audit({title: 'Base Price', details: JSON.stringify(retail)});
-                    log.audit({title: 'discount', details: JSON.stringify(discount)});
-                    if (amount > 0 && billed < quantity) {
-                        if (shipped > 0 && hasPO != "DropShip" && price != -1) {
-                            linesToAdd.push(holdInfo(record, x, quantity, shipped));
+                    let collection = holdInfo(record, x, quantity, shipped);
+                    if (quantity > 0 && collection.amount > 0 && collection.billed < quantity && collection.price != -1) {
+                        //Refactor Testing
+                        log.audit({title: 'Base Price', details: JSON.stringify(collection.retail)});
+                        log.audit({title: 'discount', details: JSON.stringify(collection.discount)});
+                        if (shipped > 0 && collection.hasPO != "DropShip") {
+                            linesToAdd.push(collection);
                             //Refactor Testing
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: shipped, line: x});
-                        } else if (price != -1) {
-                            let costing = record.getSublistValue({sublistId: 'item', fieldId: 'price', line: x});
+                            //record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: collection.shipped, line: x});
+                        } else {
                             //Refactor Testing
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'price', value: 1, line: x});
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'price', costing, line: x});}
+                            //record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: collection.updatedRate, line: x});
+                            //record.setSublistValue({sublistId: 'item', fieldId: 'amount', value: (collection.updatedRate * collection.quantity), line: x});
+                            //record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: collection.retail, line: x});
                         }
                     }
 
@@ -80,11 +79,15 @@ define(['N/record', 'N/search'],
                             //Refactor Testing
                             //record.setSublistValue({sublistId: 'item', fieldId: 'item', value: linesToAdd[x].item, line: nextLine});
                             //record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: linesToAdd[x].quantity, line: nextLine});
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'price', value: linesToAdd[x].currentPriceLevel, line: nextLine});
+                            //record.setSublistValue({sublistId: 'item', fieldId: 'price', value: linesToAdd[x].price, line: nextLine});
+                            //record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: collection.updatedRate, line: nextLine});
+                            //record.setSublistValue({sublistId: 'item', fieldId: 'amount', value: (collection.updatedRate * collection.quantity), line: nextLine});
+                            //record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: collection.retail, line: nextLine});
                         }
                     }
 
-                    record.save();
+                    //Refactor Testing
+                    //record.save();
                 }
             }
             catch (e) {
