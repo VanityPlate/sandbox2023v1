@@ -65,26 +65,23 @@ define(['N/record', 'N/search'],
                         log.audit({title: 'updatedRate', details: JSON.stringify(collection.updatedRate)});
                         if (shipped > 0 && collection.hasPO != "DropShip") {
                             linesToAdd.push(collection);
-                            //Refactor Testing
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: collection.shipped, line: x});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: collection.shipped, line: x});
                         } else {
-                            //Refactor Testing
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: collection.updatedRate, line: x});
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'amount', value: (collection.updatedRate * collection.quantity), line: x});
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: collection.retail, line: x});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: collection.updatedRate, line: x});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'amount', value: (collection.updatedRate * collection.quantity), line: x});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: collection.retail, line: x});
                         }
                     }
 
                     if (linesToAdd.length > 0) {
                         for (let x = 0; x < linesToAdd.length; x++) {
                             let nextLine = record.getLineCount({sublistId: 'item'});
-                            //Refactor Testing
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'item', value: linesToAdd[x].item, line: nextLine});
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: linesToAdd[x].quantity, line: nextLine});
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'price', value: linesToAdd[x].price, line: nextLine});
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: collection.updatedRate, line: nextLine});
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'amount', value: (collection.updatedRate * collection.quantity), line: nextLine});
-                            //record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: collection.retail, line: nextLine});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'item', value: linesToAdd[x].item, line: nextLine});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: linesToAdd[x].quantity, line: nextLine});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'price', value: linesToAdd[x].price, line: nextLine});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: collection.updatedRate, line: nextLine});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'amount', value: (collection.updatedRate * collection.quantity), line: nextLine});
+                            record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: collection.retail, line: nextLine});
                         }
                     }
 
