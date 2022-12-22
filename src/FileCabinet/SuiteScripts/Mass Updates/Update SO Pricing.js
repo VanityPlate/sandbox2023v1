@@ -79,9 +79,9 @@ define(['N/record', 'N/search'],
                         record.setSublistValue({sublistId: 'item', fieldId: 'item', value: linesToAdd[x].item, line: nextLine});
                         record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: linesToAdd[x].quantity, line: nextLine});
                         record.setSublistValue({sublistId: 'item', fieldId: 'price', value: linesToAdd[x].price, line: nextLine});
-                        record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: collection.updatedRate, line: nextLine});
-                        record.setSublistValue({sublistId: 'item', fieldId: 'amount', value: (collection.updatedRate * collection.quantity), line: nextLine});
-                        record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: collection.retail, line: nextLine});
+                        record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: linesToAdd[x].updatedRate, line: nextLine});
+                        record.setSublistValue({sublistId: 'item', fieldId: 'amount', value: (linesToAdd[x].updatedRate * linesToAdd[x].quantity), line: nextLine});
+                        record.setSublistValue({sublistId: 'item', fieldId: 'custcol_pcg_list_price', value: linesToAdd[x].retail, line: nextLine});
                     }
                 }
 
