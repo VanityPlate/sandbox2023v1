@@ -22,11 +22,11 @@ define(['N/record', 'N/search'],
                 //Creates object saving line item data for splitting
                 let holdInfo = (record, line, quantity = null, shipped = null) => {
                     if(quantity != null && shipped != null) {
-                        let billed = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'quantitybilled'});
-                        let amount = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'amount'});
-                        let hasPO = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'createpo'});
-                        let price = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'price'});
-                        let item = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'item'});
+                        let billed = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'quantitybilled'});
+                        let amount = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'amount'});
+                        let hasPO = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'createpo'});
+                        let price = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'price'});
+                        let item = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'item'});
                         let retail = search.lookupFields({type: search.Type.ITEM, id: item, columns: ['baseprice']});
                         let discount = search.lookupFields({
                             type: search.Type.PRICE_LEVEL,
