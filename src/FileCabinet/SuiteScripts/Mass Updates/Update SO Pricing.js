@@ -85,8 +85,8 @@ define(['N/record', 'N/search'],
                     }
                 }
 
-                //Refactor Testing
-                //record.save();
+
+                record.save();
             }
             catch (e) {
                 log.error({title: 'Critical error in each', details: e});
