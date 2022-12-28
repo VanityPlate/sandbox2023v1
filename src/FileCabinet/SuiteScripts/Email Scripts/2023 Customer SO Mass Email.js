@@ -1,10 +1,16 @@
 /**
+ *
+ * @copyright Alex S. Ducken 2022 alexducken@gmail.com
+ * HydraMaster LLC
+ *
  * @NApiVersion 2.1
  * @NScriptType MapReduceScript
  */
-define([],
+define(['N/search',
+                        'N/email'],
     
-    () => {
+    (search,
+                email) => {
         /**
          * Defines the function that is executed at the beginning of the map/reduce process and generates the input data.
          * @param {Object} inputContext
