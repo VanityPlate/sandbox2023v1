@@ -7,10 +7,14 @@
  * @NScriptType MapReduceScript
  */
 define(['N/search',
-                        'N/email'],
+                        'N/email',
+                        'N/render',
+                        'N/file'],
     
     (search,
-                email) => {
+                email,
+                render,
+                file) => {
         /**
          * Defines the function that is executed at the beginning of the map/reduce process and generates the input data.
          * @param {Object} inputContext
@@ -26,7 +30,7 @@ define(['N/search',
 
         const getInputData = (inputContext) => {
                 try{
-
+                        return {type: 'search', id: 'customsearch_atlas_items_on_bo_rpt_4'};
                 }
                 catch (e) {
                         log.error({title: 'Critical error in getInputData', details: e});
@@ -51,7 +55,13 @@ define(['N/search',
          */
 
         const map = (mapContext) => {
-
+                try{
+                        //Refactor Testing
+                        log.audit({title: mapContext.key, details: JSON.parse(mapContext.value)});
+                }
+                catch (e) {
+                        log.error({title: 'Critical error in map', details: e});
+                }
         }
 
         /**
@@ -70,7 +80,12 @@ define(['N/search',
          * @since 2015.2
          */
         const reduce = (reduceContext) => {
-
+                try{
+                        let salePDF = 1657830; //Production 1667904
+                }
+                catch (e) {
+                        log.error({title: 'Critical error in reduce', details: e});
+                }
         }
 
 
@@ -102,6 +117,6 @@ define(['N/search',
                 }
         }
 
-        return {getInputData, map, reduce, summarize}
+        return {getInputData, map, reduce}
 
     });
