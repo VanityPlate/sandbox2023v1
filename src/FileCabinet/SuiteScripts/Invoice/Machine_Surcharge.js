@@ -7,7 +7,8 @@
  * Update 3/28/2022 Including logic to consider dates held by MS_Library.js
  * Update 4/18/2022 Refactoring to use NetSuite fields instead of library making changes to how items that are dependent
  *                  on dates are checked but not to the business logic
- * Update 12/26/2022 Some light refactoring, making changes to not alter lines that have already been fulfilled.
+ * Update 12/26/2022 Some light refactoring, making changes to not alter lines that have already been fulfilled. Added logic
+ *                  to handle case when there is zero surcharge
  *
  * @NApiVersion 2.1
  * @NScriptType WorkflowActionScript
@@ -176,6 +177,15 @@ define(['N/search', 'N/record', './MS_Library', 'N/currentRecord'],
                                     });
                                     recordObj.commitLine({sublistId: 'item'});
                                     surcharge += moreCharge;
+                                }
+                                else{
+                                    recordObj.selectLine({sublistId: 'item', line: x});
+                                    recordObj.setCurrentSublistValue({
+                                        sublistId: 'item',
+                                        fieldId: 'custcol_line_surcharge',
+                                        value: 0
+                                    });
+                                    recordObj.commitLine({sublistId: 'item'});
                                 }
                                 //Commented Out Saved for Testing
                                 //log.audit({title: 'Running Surcharge Total', details: surcharge});
