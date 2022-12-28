@@ -48,7 +48,7 @@ define(['N/search', 'N/record', './MS_Library', 'N/currentRecord'],
                     let itemClass, itemId, itemDollarSur, itemSur, classDollarSur, classSur, quantity, billed;
                     for (let x = 0; x < lines; x++) {
                         quantity = recordObj.getSublistValue({sublistId: 'item', fieldId: 'quantity', line: x});
-                        billed = recordType.getSublistValue({sublistId: 'item', fieldId: 'quantitybilled', line: x});
+                        billed = recordObj.getSublistValue({sublistId: 'item', fieldId: 'quantitybilled', line: x});
                         //Determining if the line needs to be edited at all
                         //Not editing billed lines will save existing surcharges and match them to invoices
                         if(quantity && billed < quantity) {
