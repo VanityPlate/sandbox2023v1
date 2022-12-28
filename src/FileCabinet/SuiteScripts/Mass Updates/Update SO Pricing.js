@@ -27,7 +27,7 @@ define(['N/record', 'N/search'],
                         let hasPO = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'createpo'});
                         let price = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'price'});
                         let item = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'item'});
-                        let lineSurcharge = record.getSublistValue({sublistId: 'item', line: x, fieldId: 'custcol_line_surcharge'}) ? record.getSublistValue({sublistId: 'item', line: x, fieldId: 'custcol_line_surcharge'}) : false;
+                        let lineSurcharge = record.getSublistValue({sublistId: 'item', line: line, fieldId: 'custcol_line_surcharge'}) ? record.getSublistValue({sublistId: 'item', line: x, fieldId: 'custcol_line_surcharge'}) : false;
                         let retail = search.lookupFields({type: search.Type.ITEM, id: item, columns: ['baseprice']}).baseprice;
                         let discount = search.lookupFields({
                             type: search.Type.PRICE_LEVEL,
