@@ -70,8 +70,8 @@ define(['N/record', 'N/search'],
                             linesToAdd.push(collection);
                             record.setSublistValue({sublistId: 'item', fieldId: 'quantity', value: collection.shipped, line: x});
                             if(collection.billed > 0 && collection.lineSurcharge){
-                                collection.lineSurcharge = Number(collection.lineSurcharge);
-                                replaceLineSurcharge = (collection.lineSurcharge / quantity) * collection.billed;
+                                replaceLineSurcharge = (Number(collection.lineSurcharge) / quantity) * collection.billed;
+                                record.setSublistValue({sublistId: 'item', line: x, fieldId: 'custcol_line_surcharge', value: replaceLineSurcharge});
                             }
                         } else {
                             record.setSublistValue({sublistId: 'item', fieldId: 'rate', value: collection.updatedRate, line: x});
