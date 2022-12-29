@@ -56,8 +56,10 @@ define(['N/search',
 
         const map = (mapContext) => {
                 try{
-                        //Refactor Testing
-                        log.audit({title: mapContext.key, details: JSON.parse(mapContext.value)});
+                        mapContext.write({
+                                key: JSON.parse(mapContext.value).values.entity.value,
+                                value: mapContext.key
+                        });
                 }
                 catch (e) {
                         log.error({title: 'Critical error in map', details: e});
@@ -82,6 +84,8 @@ define(['N/search',
         const reduce = (reduceContext) => {
                 try{
                         let salePDF = 1657830; //Production 1667904
+                        //Refactor Testing
+                        log.audit({title: reduceContext.key, details: reduceContext.values});
                 }
                 catch (e) {
                         log.error({title: 'Critical error in reduce', details: e});
