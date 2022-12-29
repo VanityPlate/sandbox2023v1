@@ -96,7 +96,7 @@ define(['N/record', 'N/search'],
                 record.save();
             }
             catch (e) {
-                log.error({title: 'Critical error in each', details: e});
+                log.error({title: 'Critical error in each for record: ' + params.id, details: e});
             }
         }
 
