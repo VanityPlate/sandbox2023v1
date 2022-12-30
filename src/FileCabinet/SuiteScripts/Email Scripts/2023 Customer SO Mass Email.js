@@ -93,10 +93,12 @@ define(['N/search',
                                 let template = file.load({id: salePDF});
                                 let renderer = render.create();
                                 renderer.templateContent = template.getContents();
-                                for(let x = 0; x < fileIds.length; x++){
+                                for(const sale of fileIds.values()){
+                                        //Refactor Testing
+                                        log.audit({title: "Checking fileIds iteration", details: sale});
                                         renderer.addRecord({
                                                 type: record.Type.SALES_ORDER,
-                                                id: fileIds[x]
+                                                id: sale
                                         });
                                         files.push(renderer.renderAsPdf());
                                 }
@@ -121,17 +123,15 @@ define(['N/search',
                             "rising material costs.\n\n" +
                             "If you have any questions, please contact your sales representative.";
                         let sender = 20582; //HydraMaster Sales
-                        let fileMatrix = [[]];
+                        let fileMatrix = [new Set()];
                         let files = [];
                         let y = 0, z = 0;
                         //Split into groups of five SO
                         for(let x = 0; x < reduceContext.values.length; x++){
                                 if(z == 5){
-                                        z = 0; y++;
+                                        z = 0; y++; fileMatrix[y] = new Set();
                                 }
-                                //Refactor Testing
-                                log.audit({title: reduceContext.key, details: reduceContext.values[x]});
-                                fileMatrix[y].push(reduceContext.values[x]); z++;
+                                fileMatrix[y].add(reduceContext.values[x]); z++;
                         }
                         //Send out email(s) with no more than five transactions attached to each
                         for(let x = 0; x < fileMatrix.length; x++){
