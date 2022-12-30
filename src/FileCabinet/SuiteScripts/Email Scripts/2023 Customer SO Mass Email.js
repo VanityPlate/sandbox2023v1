@@ -9,12 +9,14 @@
 define(['N/search',
                         'N/email',
                         'N/render',
-                        'N/file'],
+                        'N/file',
+                        'N/record'],
     
     (search,
                 email,
                 render,
-                file) => {
+                file,
+                record) => {
         /**
          * Defines the function that is executed at the beginning of the map/reduce process and generates the input data.
          * @param {Object} inputContext
