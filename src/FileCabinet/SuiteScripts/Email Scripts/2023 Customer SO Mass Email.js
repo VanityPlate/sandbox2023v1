@@ -84,8 +84,65 @@ define(['N/search',
         const reduce = (reduceContext) => {
                 try{
                         let salePDF = 1657830; //Production 1667904
+                        //Function for creating files
+                        let createFiles = (files, fileIds) => {
+                                let template = file.load({id: salePDF});
+                                let renderer = render.create();
+                                renderer.templateContent = template.getContents();
+                                for(let x = 0; x < fileIds.length; x++){
+                                        renderer.addRecord({
+                                                type: record.Type.SALES_ORDER,
+                                                id: fileIds[x]
+                                        });
+                                        files.push(renderer.renderAsPdf());
+                                }
+                        }
+
+
+                        let subject = "2023 Pricing Updates";
+                        let body = "Dear HydraMaster Customer,\n\n" +
+                            "Attached are the updated sales orders with 2023 pricing.\n\n" +
+                            "We at HydraMaster thank you for your patience as we continue to " +
+                            "deal with ongoing issues in the supply chain.\n\n" +
+                            "In 2022 we were forced to implement a surcharge on nearly our entire catalog. " +
+                            "We recognize this complicates communication with your own customers around retail " +
+                            "pricing. So, for 2023 we have updated our price book; this has resulted in significant " +
+                            "increases throughout our catalog. We have made prior communications surrounding " +
+                            "this forthcoming price increase (Reference: Distributor Pricing Communication " +
+                            "sent by email on November 17th, 2022) . The crib notes are:\n\n" +
+                            "The price increases are retroactive to all preexisting orders.\n" +
+                            "The new prices will take effect January 1, 2023.\n" +
+                            "We will remove surcharges from nearly all our products January 1, 2023.\n" +
+                            "HydraMaster reserves the right to reintroduce surcharges in the face of " +
+                            "rising material costs.\n\n" +
+                            "If you have any questions, please contact your sales representative.";
+                        let sender = 20582; //HydraMaster Sales
+                        let fileMatrix = [[]];
+                        let files = [];
+                        let y = 0, z = 0;
+                        //Split into groups of five SO
+                        for(let x = 0; x < reduceContext.values.length; x++){
+                                if(z == 5){
+                                        z = 0; y++;
+                                }
+                                fileMatrix[y].push(reduceContext[x]); z++;
+                        }
+                        //Send out email(s) with no more than five transactions attached to each
+                        for(let x = 0; x < fileMatrix.length; x++){
+                                files = [];
+                                createFiles(files, fileMatrix[x]);
+                                email.send({
+                                        author: sender,
+                                        recipients: reduceContext.key,
+                                        subject: subject,
+                                        body: body,
+                                        attachments: files
+                                });
+                        }
+
                         //Refactor Testing
                         log.audit({title: reduceContext.key, details: reduceContext.values});
+
                 }
                 catch (e) {
                         log.error({title: 'Critical error in reduce', details: e});
