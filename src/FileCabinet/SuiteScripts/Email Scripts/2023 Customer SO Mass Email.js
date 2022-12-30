@@ -85,6 +85,8 @@ define(['N/search',
          */
         const reduce = (reduceContext) => {
                 try{
+                        //Refactor Testing
+                        log.audit({title: reduceContext.key, details: reduceContext.values});
                         let salePDF = 1657830; //Production 1667904
                         //Function for creating files
                         let createFiles = (files, fileIds) => {
