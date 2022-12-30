@@ -96,9 +96,11 @@ define(['N/search',
                                 for(const sale of fileIds.values()){
                                         //Refactor Testing
                                         log.audit({title: "Checking fileIds iteration", details: sale});
-                                        renderer.addRecord({
-                                                type: record.Type.SALES_ORDER,
-                                                id: sale
+                                        renderer.addRecord({templateName: "record",
+                                                record: record.load({
+                                                        type: record.Type.SALES_ORDER,
+                                                        id: sale
+                                                })
                                         });
                                         files.push(renderer.renderAsPdf());
                                 }
