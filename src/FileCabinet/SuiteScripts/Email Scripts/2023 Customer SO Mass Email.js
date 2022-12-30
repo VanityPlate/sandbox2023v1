@@ -127,7 +127,7 @@ define(['N/search',
                                 if(z == 5){
                                         z = 0; y++;
                                 }
-                                fileMatrix[y].push(reduceContext[x]); z++;
+                                fileMatrix[y].push(reduceContext.values[x]); z++;
                         }
                         //Send out email(s) with no more than five transactions attached to each
                         for(let x = 0; x < fileMatrix.length; x++){
