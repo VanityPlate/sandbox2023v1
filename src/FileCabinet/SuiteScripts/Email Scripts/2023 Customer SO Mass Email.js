@@ -127,6 +127,8 @@ define(['N/search',
                                 if(z == 5){
                                         z = 0; y++;
                                 }
+                                //Refactor Testing
+                                log.audit({title: reduceContext.key, details: reduceContext.values[x]});
                                 fileMatrix[y].push(reduceContext.values[x]); z++;
                         }
                         //Send out email(s) with no more than five transactions attached to each
@@ -141,10 +143,6 @@ define(['N/search',
                                         attachments: files
                                 });
                         }
-
-                        //Refactor Testing
-                        log.audit({title: reduceContext.key, details: reduceContext.values});
-
                 }
                 catch (e) {
                         log.error({title: 'Critical error in reduce', details: e});
