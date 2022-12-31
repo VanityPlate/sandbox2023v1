@@ -139,6 +139,8 @@ define(['N/search',
                                 if(z == 5){
                                         z = 0; y++; fileMatrix[y] = [];
                                 }
+                                //Refactor Testing
+                                log.audit({title: value, details: "checking value to search for point of failure"});
                                 fileMatrix[y].push(value); z++;
                         }
                         //Send out email(s) with no more than five transactions attached to each
