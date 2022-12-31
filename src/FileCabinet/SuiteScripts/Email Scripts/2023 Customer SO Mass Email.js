@@ -88,6 +88,7 @@ define(['N/search',
                         //Refactor Testing
                         log.audit({title: reduceContext.key, details: reduceContext.values});
                         let salePDF = 1657830; //Production 1667904
+                        let fileToAdd;
                         //Function for creating files
                         let createFiles = (files, fileIds) => {
                                 let template = file.load({id: salePDF});
@@ -102,7 +103,10 @@ define(['N/search',
                                                         id: fileIds[x]
                                                 })
                                         });
-                                        files.push(renderer.renderAsPdf());
+                                        fileToAdd = renderer.renderAsPdf();
+                                        fileToAdd.name = search.lookupFields({type: record.Type.SALES_ORDER, id: fileIds[x],
+                                                                                        columns: ["tranid"]}).tranid;
+                                        files.push(fileToAdd);
                                 }
                         }
 
