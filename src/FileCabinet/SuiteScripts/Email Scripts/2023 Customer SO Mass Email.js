@@ -132,7 +132,8 @@ define(['N/search',
                         let fileMatrix = [[]];
                         let files = [];
                         let y = 0, z = 0;
-                        let values =  new Set(reduceContext.values);
+                        let values =  new Set();
+                        for(let x = 0; x < reduceContext.values.length; x++){values.add(reduceContext.values[x])};
                         //Split into groups of five SO
                         for(const value in values){
                                 if(z == 5){
