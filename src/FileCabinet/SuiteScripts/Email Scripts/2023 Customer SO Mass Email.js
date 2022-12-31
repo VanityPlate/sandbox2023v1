@@ -133,9 +133,12 @@ define(['N/search',
                         let files = [];
                         let y = 0, z = 0;
                         let values =  new Set();
-                        for(let x = 0; x < reduceContext.values.length; x++){values.add(reduceContext.values[x])};
+                        for(let x = 0; x < reduceContext.values.length; x++){
+                                //Refactor Testing
+                                log.audit({title: reduceContext.values[x], details: "checking value to search for point of failure"});
+                                values.add(reduceContext.values[x])};
                         //Split into groups of five SO
-                        for(const value in values){
+                        for(const value of values.values()){
                                 if(z == 5){
                                         z = 0; y++; fileMatrix[y] = [];
                                 }
