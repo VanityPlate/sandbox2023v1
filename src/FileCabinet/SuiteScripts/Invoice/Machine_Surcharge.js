@@ -191,14 +191,16 @@ define(['N/search', 'N/record', './MS_Library', 'N/currentRecord'],
                                 //log.audit({title: 'Running Surcharge Total', details: surcharge});
                             }
                         }
+                        else{
+                            surcharge += record.getSublistValue({sublistId: 'item', fieldId: 'custcol_line_surcharge', line: x});
+                        }
                     }
                     //saved for testing
                     //log.audit({title: 'Testing type and surcharge', details: recordType + ' ' + surcharge});
-                    if (surcharge > 0) {
                         if (recordType == 'salesorder' || recordType == 'estimate') {
                             recordObj.setValue({fieldId: 'custbody_totalsurcharge', value: surcharge});
                         }
-                        if (recordType == 'invoice') {
+                        if (recordType == 'invoice' && surcharge > 0) {
                             recordObj.setValue({fieldId: 'custbody_totalsurcharge', value: surcharge});
                             let discount = recordObj.getValue({fieldId: 'discounttotal'});
                             recordObj.selectNewLine({sublistId: 'item'});
@@ -213,7 +215,6 @@ define(['N/search', 'N/record', './MS_Library', 'N/currentRecord'],
                             recordObj.setValue({fieldId: 'discountrate', value: discount});
                             recordObj.setValue({fieldId: 'discounttotal', value: discount});
                         }
-                    }
                 }
             }
             catch (e) {
