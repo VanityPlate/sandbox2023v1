@@ -192,7 +192,7 @@ define(['N/search', 'N/record', './MS_Library', 'N/currentRecord'],
                             }
                         }
                         else{
-                            surcharge += record.getSublistValue({sublistId: 'item', fieldId: 'custcol_line_surcharge', line: x});
+                            surcharge += recordObj.getSublistValue({sublistId: 'item', fieldId: 'custcol_line_surcharge', line: x});
                         }
                     }
                     //saved for testing
