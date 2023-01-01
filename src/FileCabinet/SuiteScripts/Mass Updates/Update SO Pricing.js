@@ -44,7 +44,7 @@ define(['N/record', 'N/search'],
                             hasPO: hasPO,
                             retail: retail,
                             discount: discount,
-                            updatedRate: retail * discount,
+                            updatedRate: (retail * discount).toFixed(2),
                             lineSurcharge: lineSurcharge
                         };
                     }
