@@ -6,9 +6,11 @@
  * @NApiVersion 2.1
  * @NScriptType MapReduceScript
  */
-define([],
+define(['N/runtime',
+                        'N/search'],
     
-    () => {
+    (runtime,
+                search) => {
         /**
          * Defines the function that is executed at the beginning of the map/reduce process and generates the input data.
          * @param {Object} inputContext
@@ -24,7 +26,10 @@ define([],
 
         const getInputData = (inputContext) => {
                 try{
-
+                        let script = runtime.getCurrentScript();
+                        let userEmail = script.getParameter({name: 'custscript_user_email'});
+                        //Refactor Testing
+                        log.audit({title: 'TestFire and Email', details: userEmail});
                 }
                 catch (e) {
                         log.audit({title: 'Critical error in getInputData', details: e});
