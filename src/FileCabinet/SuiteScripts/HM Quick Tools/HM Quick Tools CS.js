@@ -169,7 +169,7 @@ function(loadUnknown,
                 let output = url.resolveScript({
                     deploymentId: schedulerLib.hmSchDef.deploymentID,
                     scriptId: schedulerLib.hmSchDef.scriptID,
-                    params: {scriptName: 'monthlyOnOrder', script_parameters: JSON.stringify({custscript_user_email: userEmail})}
+                    params: {scriptName: 'monthlyOnOrder', script_parameters: JSON.stringify({custscript_user_email_monthly_so: userEmail})}
                 });
                 https.get({
                     url: output

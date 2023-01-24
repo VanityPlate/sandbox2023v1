@@ -27,7 +27,7 @@ define(['N/runtime',
         const getInputData = (inputContext) => {
                 try{
                         let script = runtime.getCurrentScript();
-                        let userEmail = script.getParameter({name: 'custscript_user_email'});
+                        let userEmail = script.getParameter({name: 'custscript_user_email_monthly_so'});
                         //Refactor Testing
                         log.audit({title: 'TestFire and Email', details: userEmail});
                 }
