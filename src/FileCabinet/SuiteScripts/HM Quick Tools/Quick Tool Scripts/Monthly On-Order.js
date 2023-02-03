@@ -72,7 +72,7 @@ define(['N/runtime',
                                             "AND",
                                             ["amount","greaterthan","0.00"],
                                             "AND",
-                                            ["datecreated","within","1/1/2020 12:00 am","1/31/2020 11:59 pm"],
+                                            ["datecreated","within","1/1/2020 12:00 am","1/5/2020 11:59 pm"],
                                             "AND",
                                             ["mainline","is","T"]
                                     ],
@@ -191,6 +191,6 @@ define(['N/runtime',
         }
 
         //Refactor Testing
-        return {getInputData, reduce, summarize}
+        return {getInputData, map, reduce, summarize}
 
     });
