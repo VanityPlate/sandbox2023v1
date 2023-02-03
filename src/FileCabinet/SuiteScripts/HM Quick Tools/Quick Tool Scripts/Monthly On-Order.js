@@ -26,7 +26,7 @@ define(['N/runtime',
                 let month = currentDate.getMonth();
                 let year = currentDate.getFullYear();
                 let dates = [];
-                let setDate, dateString;
+                let setDate;
                 for(let x = 23; x >= 0; x--){
                     setDate = new Date(year, month, 1);
                     dates.push({[setDate.toString()]: setDate.parse()});
