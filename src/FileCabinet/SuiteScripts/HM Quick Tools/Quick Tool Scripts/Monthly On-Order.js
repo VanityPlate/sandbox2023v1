@@ -26,10 +26,10 @@ define(['N/runtime',
                 let month = currentDate.getMonth();
                 let year = currentDate.getFullYear();
                 let dates = [];
-                let setDate;
+                let setDate, dateString;
                 for(let x = 23; x >= 0; x--){
-                    setDate = new Date(year, month, 1).toString();
-                    dates.push({setDate: setDate.parse()});
+                    setDate = new Date(year, month, 1);
+                    dates.push({[setDate.toString()]: setDate.parse()});
                     month--;
                     if(month < 0){
                         year--;
