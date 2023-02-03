@@ -7,10 +7,43 @@
  * @NScriptType MapReduceScript
  */
 define(['N/runtime',
-                        'N/search'],
+                        'N/search',
+                        'N/email',
+                        'N/file'],
     
     (runtime,
-                search) => {
+                search,
+                email,
+                file) => {
+
+        /**
+         * Defines the function for generating the dates that open sales will measured against.
+         * @param {Date} currentDate
+         * @return {Array}
+         */
+        let getDates = (currentDate) => {
+            try{
+                let month = currentDate.getMonth();
+                let year = currentDate.getFullYear();
+                let dates = [];
+                let setDate;
+                for(let x = 23; x >= 0; x--){
+                    setDate = new Date(year, month, 1).toString();
+                    dates.push({setDate: setDate.parse()});
+                    month--;
+                    if(month < 0){
+                        year--;
+                        month = 11;
+                    }
+                }
+                return dates;
+            }
+            catch (e){
+                log.error({title: "Critical error in getDates", details: e});
+            }
+        }
+
+
         /**
          * Defines the function that is executed at the beginning of the map/reduce process and generates the input data.
          * @param {Object} inputContext
@@ -30,6 +63,25 @@ define(['N/runtime',
                         let userEmail = script.getParameter({name: 'custscript_user_email_monthly_so'});
                         //Refactor Testing
                         log.audit({title: 'TestFire and Email', details: userEmail});
+                        //Refactor Testing
+                        return search.create({
+                                type: "salesorder",
+                                filters:
+                                    [
+                                            ["type","anyof","SalesOrd"],
+                                            "AND",
+                                            ["amount","greaterthan","0.00"],
+                                            "AND",
+                                            ["datecreated","within","1/1/2020 12:00 am","1/31/2020 11:59 pm"],
+                                            "AND",
+                                            ["mainline","is","T"]
+                                    ],
+                                columns:
+                                    [
+                                            search.createColumn({name: "trandate", label: "Date"}),
+                                            search.createColumn({name: "amount", label: "Amount"})
+                                    ]
+                        });
                 }
                 catch (e) {
                         log.audit({title: 'Critical error in getInputData', details: e});
@@ -55,7 +107,28 @@ define(['N/runtime',
 
         const map = (mapContext) => {
                 try{
+                        //refactor testing
+                        log.audit({title: mapContext.key, details: mapContext.value});
+                        let results = search.create({
+                                type: "invoice",
+                                filters:
+                                    [
+                                            ["type","anyof","CustInvc"],
+                                            "AND",
+                                            ["createdfrom","anyof",mapContext.key],
+                                            "AND",
+                                            ["mainline","is","T"]
+                                    ],
+                                columns:
+                                    [
+                                            search.createColumn({name: "trandate", label: "Date"}),
+                                            search.createColumn({name: "amount", label: "Amount"})
+                                    ]
+                        }).run().getRange({start: 0, end: 100});
+                        //Refactor Testing
+                        for(let x = 0; x < results.length; x++){
 
+                        }
                 }
                 catch (e) {
                         log.audit({title: 'Critical error in mapContext', details: e});
@@ -108,13 +181,16 @@ define(['N/runtime',
          */
         const summarize = (summaryContext) => {
                 try{
-
+                    let dates = getDates(new Date());
+                    //Refactor Testing
+                    log.audit({title: 'Testing Dates,', details: dates});
                 }
                 catch (e) {
                         log.audit({title: 'Critical error in summaryContext', details: e});
                 }
         }
 
-        return {getInputData, map, reduce, summarize}
+        //Refactor Testing
+        return {getInputData, reduce, summarize}
 
     });
