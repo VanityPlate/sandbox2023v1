@@ -109,6 +109,7 @@ define(['N/runtime',
                 try{
                         //refactor testing
                         log.audit({title: mapContext.key, details: mapContext.value});
+                        let value = JSON.parse(mapContext.value);
                         let results = search.create({
                                 type: "invoice",
                                 filters:
