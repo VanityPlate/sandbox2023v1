@@ -68,7 +68,7 @@ define(['N/runtime',
 
                     //Refactor Testing
                     log.audit({title: 'Testing Dates,', details: dates});
-                    let scriptRecord = record.load({type: record.Type.SCRIPT_DEPLOYMENT, id: deploymentId});
+                    let scriptRecord = record.load({type: record.Type.SCRIPT_DEPLOYMENT, id: 7514});
                     scriptRecord.setValue({fieldId: 'custscript_date_info', value: dates.toString()});
                     scriptRecord.save();
 
