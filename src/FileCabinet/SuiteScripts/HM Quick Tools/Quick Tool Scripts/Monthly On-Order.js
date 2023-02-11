@@ -61,12 +61,14 @@ define(['N/runtime',
 
         const getInputData = (inputContext) => {
                 try{
+                    let deploymentId = 2320;
+
                     let script = runtime.getCurrentScript();
                     let dates = getDates(new Date());
 
                     //Refactor Testing
                     log.audit({title: 'Testing Dates,', details: dates});
-                    let scriptRecord = record.load({type: record.Type.SCRIPT_DEPLOYMENT, id: script.id});
+                    let scriptRecord = record.load({type: record.Type.SCRIPT_DEPLOYMENT, id: deploymentId});
                     scriptRecord.setValue({fieldId: 'custscript_date_info', value: dates.toString()});
                     scriptRecord.save();
 
