@@ -9,12 +9,14 @@
 define(['N/runtime',
                         'N/search',
                         'N/email',
-                        'N/file'],
+                        'N/file',
+                        'N/record'],
     
     (runtime,
                 search,
                 email,
-                file) => {
+                file,
+                record) => {
 
         /**
          * Defines the function for generating the dates that open sales will measured against.
@@ -59,29 +61,38 @@ define(['N/runtime',
 
         const getInputData = (inputContext) => {
                 try{
-                        let script = runtime.getCurrentScript();
-                        let userEmail = script.getParameter({name: 'custscript_user_email_monthly_so'});
-                        //Refactor Testing
-                        log.audit({title: 'TestFire and Email', details: userEmail});
-                        //Refactor Testing
-                        return search.create({
-                                type: "salesorder",
-                                filters:
-                                    [
-                                            ["type","anyof","SalesOrd"],
-                                            "AND",
-                                            ["amount","greaterthan","0.00"],
-                                            "AND",
-                                            ["datecreated","within","1/1/2020 12:00 am","1/5/2020 11:59 pm"],
-                                            "AND",
-                                            ["mainline","is","T"]
-                                    ],
-                                columns:
-                                    [
-                                            search.createColumn({name: "trandate", label: "Date"}),
-                                            search.createColumn({name: "amount", label: "Amount"})
-                                    ]
-                        });
+                    let script = runtime.getCurrentScript();
+                    let dates = getDates(new Date());
+
+                    //Refactor Testing
+                    log.audit({title: 'Testing Dates,', details: dates});
+                    let scriptRecord = record.load({type: record.Type.MAP_REDUCE_SCRIPT, id: script.id});
+                    scriptRecord.setValue({fieldId: 'custscript_date_info', value: dates.toString()});
+                    scriptRecord.save();
+
+                    //Refactor Testing
+                    let userEmail = script.getParameter({name: 'custscript_user_email_monthly_so'});
+                    log.audit({title: 'TestFire and Email', details: userEmail});
+
+                    //Refactor Testing
+                    return search.create({
+                        type: "salesorder",
+                        filters:
+                            [
+                                ["type","anyof","SalesOrd"],
+                                "AND",
+                                ["amount","greaterthan","0.00"],
+                                "AND",
+                                ["datecreated","within","1/1/2020 12:00 am","1/5/2020 11:59 pm"],
+                                "AND",
+                                ["mainline","is","T"]
+                            ],
+                        columns:
+                            [
+                                search.createColumn({name: "trandate", label: "Date"}),
+                                search.createColumn({name: "amount", label: "Amount"})
+                            ]
+                    });
                 }
                 catch (e) {
                         log.audit({title: 'Critical error in getInputData', details: e});
@@ -182,9 +193,7 @@ define(['N/runtime',
          */
         const summarize = (summaryContext) => {
                 try{
-                    let dates = getDates(new Date());
-                    //Refactor Testing
-                    log.audit({title: 'Testing Dates,', details: dates});
+
                 }
                 catch (e) {
                         log.audit({title: 'Critical error in summaryContext', details: e});
