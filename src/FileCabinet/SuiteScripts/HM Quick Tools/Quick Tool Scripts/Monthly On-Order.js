@@ -67,7 +67,7 @@ define(['N/runtime',
 
                     let scriptRecord = record.load({type: record.Type.SCRIPT_DEPLOYMENT, id: deploymentId});
                     let datesJustMilli = [];
-                    dates.forEach(element => datesJustMilli.push(element.values()[0]));
+                    dates.forEach(element => datesJustMilli.push(Object.values(element)[0]));
 
 
                     scriptRecord.setValue({fieldId: 'custscript_date_info', value: JSON.stringify(datesJustMilli)});
