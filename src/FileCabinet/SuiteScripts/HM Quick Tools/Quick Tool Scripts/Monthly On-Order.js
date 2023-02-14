@@ -66,7 +66,11 @@ define(['N/runtime',
 
 
                     let scriptRecord = record.load({type: record.Type.SCRIPT_DEPLOYMENT, id: deploymentId});
-                    scriptRecord.setValue({fieldId: 'custscript_date_info', value: JSON.stringify(dates)});
+                    let datesJustMilli = [];
+                    dates.forEach(element => datesJustMilli.push(element.values[0]));
+
+
+                    scriptRecord.setValue({fieldId: 'custscript_date_info', value: JSON.stringify(datesJustMilli)});
                     scriptRecord.save();
 
                     //Refactor Testing
@@ -134,10 +138,12 @@ define(['N/runtime',
                                 search.createColumn({name: "amount", label: "Amount"})
                             ]
                         }).run().getRange({start: 0, end: 100});
-                    //Refactor Testing
-                    //for(let x = 0; x < results.length; x++){
 
-                    //}
+                    //Refactor Testing
+                    log.audit({title: mapContext.key, details: mapContext.value});
+                    for(let x = 0; x < results.length; x++){
+
+                    }
                 }
                 catch (e) {
                         log.audit({title: 'Critical error in mapContext', details: e});
