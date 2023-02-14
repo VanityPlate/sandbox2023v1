@@ -61,20 +61,13 @@ define(['N/runtime',
 
         const getInputData = (inputContext) => {
                 try{
-                    let deploymentId = 2320;
-
-                    let script = runtime.getCurrentScript();
+                    let deploymentId = 7514;
                     let dates = getDates(new Date());
 
-                    //Refactor Testing
-                    log.audit({title: 'Testing Dates,', details: dates});
-                    let scriptRecord = record.load({type: record.Type.SCRIPT_DEPLOYMENT, id: 7514});
+
+                    let scriptRecord = record.load({type: record.Type.SCRIPT_DEPLOYMENT, id: deploymentId});
                     scriptRecord.setValue({fieldId: 'custscript_date_info', value: dates.toString()});
                     scriptRecord.save();
-
-                    //Refactor Testing
-                    let userEmail = script.getParameter({name: 'custscript_user_email_monthly_so'});
-                    log.audit({title: 'TestFire and Email', details: userEmail});
 
                     //Refactor Testing
                     return search.create({
@@ -85,7 +78,7 @@ define(['N/runtime',
                                 "AND",
                                 ["amount","greaterthan","0.00"],
                                 "AND",
-                                ["datecreated","within","1/1/2020 12:00 am","1/5/2020 11:59 pm"],
+                                ["datecreated","within","1/1/2020 12:00 am","1/5/2020 11:59 pm"], //Limited for tested
                                 "AND",
                                 ["mainline","is","T"]
                             ],
@@ -121,28 +114,30 @@ define(['N/runtime',
         const map = (mapContext) => {
                 try{
                         //refactor testing
-                        log.audit({title: mapContext.key, details: mapContext.value});
-                        let value = JSON.parse(mapContext.value);
-                        let results = search.create({
-                                type: "invoice",
-                                filters:
-                                    [
-                                            ["type","anyof","CustInvc"],
-                                            "AND",
-                                            ["createdfrom","anyof",mapContext.key],
-                                            "AND",
-                                            ["mainline","is","T"]
-                                    ],
-                                columns:
-                                    [
-                                            search.createColumn({name: "trandate", label: "Date"}),
-                                            search.createColumn({name: "amount", label: "Amount"})
-                                    ]
+                    let script = runtime.getCurrentScript();
+                    let dates = JSON.parse(script.getParameter({name: 'custscript_date_info'}));
+                    log.audit({title: mapContext.key, details: dates});
+                    let value = JSON.parse(mapContext.value);
+                    let results = search.create({
+                        type: "invoice",
+                        filters:
+                            [
+                                ["type","anyof","CustInvc"],
+                                "AND",
+                                ["createdfrom","anyof",mapContext.key],
+                                "AND",
+                                ["mainline","is","T"]
+                            ],
+                        columns:
+                            [
+                                search.createColumn({name: "trandate", label: "Date"}),
+                                search.createColumn({name: "amount", label: "Amount"})
+                            ]
                         }).run().getRange({start: 0, end: 100});
-                        //Refactor Testing
-                        for(let x = 0; x < results.length; x++){
+                    //Refactor Testing
+                    for(let x = 0; x < results.length; x++){
 
-                        }
+                    }
                 }
                 catch (e) {
                         log.audit({title: 'Critical error in mapContext', details: e});
