@@ -66,7 +66,7 @@ define(['N/runtime',
 
 
                     let scriptRecord = record.load({type: record.Type.SCRIPT_DEPLOYMENT, id: deploymentId});
-                    scriptRecord.setValue({fieldId: 'custscript_date_info', value: dates.toString()});
+                    scriptRecord.setValue({fieldId: 'custscript_date_info', value: JSON.stringify(dates)});
                     scriptRecord.save();
 
                     //Refactor Testing
@@ -135,9 +135,9 @@ define(['N/runtime',
                             ]
                         }).run().getRange({start: 0, end: 100});
                     //Refactor Testing
-                    for(let x = 0; x < results.length; x++){
+                    //for(let x = 0; x < results.length; x++){
 
-                    }
+                    //}
                 }
                 catch (e) {
                         log.audit({title: 'Critical error in mapContext', details: e});
