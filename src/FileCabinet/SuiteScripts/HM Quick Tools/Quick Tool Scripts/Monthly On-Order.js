@@ -70,6 +70,9 @@ define(['N/runtime',
                     dates.forEach(element => datesJustMilli.push(Object.values(element)[0]));
 
 
+                    //Refactor Testing
+                    let session = runtime.getCurrentSession();
+                    session.set({name: 'dates', value: JSON.stringify(dates)});
                     scriptRecord.setValue({fieldId: 'custscript_date_info', value: JSON.stringify(datesJustMilli)});
                     scriptRecord.save();
 
@@ -117,10 +120,11 @@ define(['N/runtime',
 
         const map = (mapContext) => {
                 try{
-                        //refactor testing
+                    //Refactor testing
                     let script = runtime.getCurrentScript();
+                    let session = runtime.getCurrentSession();
                     let dates = JSON.parse(script.getParameter({name: 'custscript_date_info'}));
-                    log.audit({title: mapContext.key, details: dates});
+                    log.audit({title: mapContext.key, details: session.get({name: 'dates'})});
                     let value = JSON.parse(mapContext.value);
                     let results = search.create({
                         type: "invoice",
@@ -140,10 +144,10 @@ define(['N/runtime',
                         }).run().getRange({start: 0, end: 100});
 
                     //Refactor Testing
-                    log.audit({title: mapContext.key, details: mapContext.value});
-                    for(let x = 0; x < results.length; x++){
+                    //log.audit({title: mapContext.key, details: mapContext.value});
+                    //for(let x = 0; x < results.length; x++){
 
-                    }
+                    //}
                 }
                 catch (e) {
                         log.audit({title: 'Critical error in mapContext', details: e});
