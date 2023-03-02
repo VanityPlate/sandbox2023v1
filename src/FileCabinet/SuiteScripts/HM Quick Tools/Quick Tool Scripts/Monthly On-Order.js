@@ -71,8 +71,6 @@ define(['N/runtime',
 
 
                     //Refactor Testing
-                    let session = runtime.getCurrentSession();
-                    session.set({name: 'dates', value: JSON.stringify(dates)});
                     scriptRecord.setValue({fieldId: 'custscript_date_info', value: JSON.stringify(datesJustMilli)});
                     scriptRecord.save();
 
@@ -122,9 +120,8 @@ define(['N/runtime',
                 try{
                     //Refactor testing
                     let script = runtime.getCurrentScript();
-                    let session = runtime.getCurrentSession();
                     let dates = JSON.parse(script.getParameter({name: 'custscript_date_info'}));
-                    log.audit({title: mapContext.key, details: session.get({name: 'dates'})});
+                    log.audit({title: mapContext.key, details: dates});
                     let value = JSON.parse(mapContext.value);
                     let results = search.create({
                         type: "invoice",
@@ -134,14 +131,19 @@ define(['N/runtime',
                                 "AND",
                                 ["createdfrom","anyof",mapContext.key],
                                 "AND",
-                                ["mainline","is","T"]
+                                ["mainline","is","F"],
+                                "AND",
+                                ["shipping","is","F"],
+                                "AND",
+                                ["taxline","is","F"]
                             ],
                         columns:
                             [
                                 search.createColumn({name: "trandate", label: "Date"}),
-                                search.createColumn({name: "amount", label: "Amount"})
+                                search.createColumn({name: "amount", label: "Amount"}),
+                                search.createColumn({name: "tranid", label: "Document Number"})
                             ]
-                        }).run().getRange({start: 0, end: 100});
+                    }).run().getRange({start: 0, end: 100});
 
                     //Refactor Testing
                     //log.audit({title: mapContext.key, details: mapContext.value});
