@@ -1,6 +1,7 @@
 /**
  *
- * @update 4/4/2022 Deprecated for consolidation.
+ * @update 4/4/2022 Added Seriel AB.js for consolidation
+ * @update 3/2/2023 Adding function for managing serial numbers and deprecating PCG solution
  *
  * @copyright Alex S. Ducken 2020 HydraMaster LLC
  *
@@ -29,6 +30,55 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
             }
             catch (e) {
                 log.error({title: 'Critical error in pageInit', details: e});
+            }
+        }
+
+        /**
+         * Function to generate promise to create and fill serial numbers
+         * @param {Record} recordObj - the current record
+         * @return {function} promise that handles serial number generation
+         */
+        let fillSerialNumbers = (recordObj) => {
+            try{
+                let promise = new Promise((resolve, reject) =>{
+                    try {
+                        resolve(console.log(`${recordObj.getValue({fieldId: 'item'})}: ${recordObj.getValue({fieldId: 'quantity'})} `));
+                    }
+                    catch (e) {
+                        //Refactor Testing
+                        reject(console.log(`Error in promise:  + ${e}`));
+                    }
+                });
+                return promise;
+            }
+            catch (e) {
+                log.error({title: 'Critical error in fillSerialNumbers', details: e});
+            };
+        };
+
+        /**
+         * Function to be executed when field is changed.
+         *
+         * @param {Object} scriptContext
+         * @param {Record} scriptContext.currentRecord - Current form record
+         * @param {string} scriptContext.sublistId - Sublist name
+         * @param {string} scriptContext.fieldId - Field name
+         * @param {number} scriptContext.lineNum - Line number. Will be undefined if not a sublist or matrix field
+         * @param {number} scriptContext.columnNum - Line number. Will be undefined if not a matrix field
+         *
+         * @since 2015.2
+         */
+        function fieldChanged(scriptContext) {
+            try{
+                if(scriptContext.fieldId == 'item'){
+                    fillSerialNumbers(scriptContext.currentRecord);
+                }
+                if(scriptContext.fieldId == "quantity"){
+                    fillSerialNumbers(scriptContext.currentRecord);
+                }
+            }
+            catch (e) {
+                log.error({title: 'Critical error in fieldChanged', details: e});
             }
         }
 
