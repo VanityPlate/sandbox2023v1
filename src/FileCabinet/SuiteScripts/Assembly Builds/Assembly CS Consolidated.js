@@ -45,7 +45,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                         //Refactor Testing
                         console.log(`${recordObj.getValue({fieldId: 'item'})}: ${recordObj.getValue({fieldId: 'quantity'})} `);
 
-                        recordObj.setValue({fieldId: '', value: 'Test', ignoreFieldChange: true});
+                        recordObj.setValue({fieldId: 'custbody_serial_number_prefix', value: 'Test', ignoreFieldChange: true});
                     }
                     catch (e) {
                         //Refactor Testing
