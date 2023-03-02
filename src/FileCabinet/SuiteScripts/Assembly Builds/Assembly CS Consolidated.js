@@ -42,7 +42,10 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
             try{
                 let promise = new Promise((resolve, reject) =>{
                     try {
-                        resolve(console.log(`${recordObj.getValue({fieldId: 'item'})}: ${recordObj.getValue({fieldId: 'quantity'})} `));
+                        //Refactor Testing
+                        console.log(`${recordObj.getValue({fieldId: 'item'})}: ${recordObj.getValue({fieldId: 'quantity'})} `);
+
+                        recordObj.setValue({fieldId: '', value: 'Test', ignoreFieldChange: true});
                     }
                     catch (e) {
                         //Refactor Testing
