@@ -153,6 +153,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
         }
         return {
             saveRecord: saveRecord,
-            pageInit: pageInit
+            pageInit: pageInit,
+            fieldChanged: fieldChanged,
         };
     });
