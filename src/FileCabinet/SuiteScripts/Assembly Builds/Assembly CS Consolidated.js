@@ -73,15 +73,31 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                         let quantity = recordObj.getValue({fieldId: 'quantity'});
 
                         if(item != '' && quantity != '') {
-                            let currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
-                            let prefix = search.lookupFields({type: search.Type.ITEM, id: item, columns: ['custitem_hm_prefix_serialized']}).custitem_hm_prefix_serialized;
-                            let quantity = 2; //Refactor Testing add logic to find quantity
+                            let currentSerials, prefix, quantity;
+                            prefix = search.lookupFields({
+                                type: search.Type.ITEM,
+                                id: item,
+                                columns: ['custitem_hm_prefix_serialized']
+                            }).custitem_hm_prefix_serialized;
+                            if(prefix == ''){
+                                recordObj.setValue({fieldId: 'custbody_serial_number_prefix', value: 'No set prefix.', ignoreFieldChange: true});
+                            }
+                            if(fieldChanged == 'item'){
+                                currentSerials = '';
+                                recordObj.setValue({fieldId: 'custbody_serial_number_prefix', value: '', ignoreFieldChange: true});
+                                quantity = recordObj.getValue({fieldId: 'quantity'});
+                            }
+                            else {
+                                currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
+                                quantity = 2; //Refactor Testing add logic to find quantity
+                            }
                             recordObj.setValue({
                                 fieldId: 'custbody_serial_number_prefix',
                                 value: `${currentSerials}${makeSerials(quantity, prefix)}`,
                                 ignoreFieldChange: true
                             });
                         }
+                        //Do nothing unless both fields are complete
                     }
                     catch (e) {
                         //Refactor Testing
