@@ -81,6 +81,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                             }).custitem_hm_prefix_serialized;
                             if(prefix == ''){
                                 recordObj.setValue({fieldId: 'custbody_serial_number_prefix', value: 'No set prefix.', ignoreFieldChange: true});
+                                return null;
                             }
                             if(fieldChanged == 'item'){
                                 currentSerials = '';
