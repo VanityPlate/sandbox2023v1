@@ -16,7 +16,11 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
      * @param{record} record
      * @param{search} search
      */
-    function(currentRecord, log, record, search, dialog) {
+    function(currentRecord,
+             log,
+             record,
+             search,
+             dialog) {
 
         /**
          * Defines script that fires when record is first loaded
@@ -34,18 +38,50 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
         }
 
         /**
+         * Function to generate new unused serial numbers
+         * @param {int} quantity - the number of serial numbers to make
+         * @param {string} prefix - the prefix for serial numbers
+         * @return {string}
+         */
+        let makeSerials = (quantity, prefix) => {
+            try{
+                let output = '';
+                for(let x = 0; x < quantity; x++){
+                    //Refactor Testing
+                    //Add serial creation logic and serial test logic
+                    output += `${prefix}${x}\n`; //Place holder logic
+                }
+                return output;
+            }
+            catch (e) {
+                log.error({title: 'Critical error in makeSerials', details: e});
+            }
+        };
+
+        /**
          * Function to generate promise to create and fill serial numbers
          * @param {Record} recordObj - the current record
+         * @param {string} fieldChanged - the field that was updated
          * @return {function} promise that handles serial number generation
          */
-        let fillSerialNumbers = (recordObj) => {
+        let fillSerialNumbers = (recordObj, fieldChanged) => {
             try{
                 let promise = new Promise((resolve, reject) =>{
                     try {
                         //Refactor Testing
-                        console.log(`${recordObj.getValue({fieldId: 'item'})}: ${recordObj.getValue({fieldId: 'quantity'})} `);
+                        let item = recordObj.getValue({fieldId: 'item'});
+                        let quantity = recordObj.getValue({fieldId: 'quantity'});
 
-                        recordObj.setValue({fieldId: 'custbody_serial_number_prefix', value: 'Test', ignoreFieldChange: true});
+                        if(item != '' && quantity != '') {
+                            let currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
+                            let prefix = search.lookupFields({type: search.Type.ITEM, id: item, columns: ['custitem_hm_prefix_serialized']}).custitem_hm_prefix_serialized;
+                            let quantity = 2; //Refactor Testing add logic to find quantity
+                            recordObj.setValue({
+                                fieldId: 'custbody_serial_number_prefix',
+                                value: `${currentSerials}${makeSerials(quantity, prefix)}`,
+                                ignoreFieldChange: true
+                            });
+                        }
                     }
                     catch (e) {
                         //Refactor Testing
@@ -74,10 +110,10 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
         function fieldChanged(scriptContext) {
             try{
                 if(scriptContext.fieldId == 'item'){
-                    fillSerialNumbers(scriptContext.currentRecord);
+                    fillSerialNumbers(scriptContext.currentRecord, scriptContext.fieldId);
                 }
                 if(scriptContext.fieldId == "quantity"){
-                    fillSerialNumbers(scriptContext.currentRecord);
+                    fillSerialNumbers(scriptContext.currentRecord, scriptContext.fieldId);
                 }
             }
             catch (e) {
