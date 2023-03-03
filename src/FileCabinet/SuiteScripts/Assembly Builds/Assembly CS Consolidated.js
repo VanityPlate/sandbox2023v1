@@ -73,7 +73,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                         let quantity = recordObj.getValue({fieldId: 'quantity'});
 
                         if(item != '' && quantity != '') {
-                            let currentSerials, prefix, quantity;
+                            let currentSerials, prefix, reducedCurrent = '';
                             prefix = search.lookupFields({
                                 type: search.Type.ITEM,
                                 id: item,
@@ -90,15 +90,23 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                             }
                             else {
                                 currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
-                                quantity = 2; //Refactor Testing add logic to find quantity
+                                let lines = currentSerials.split(/'\n/);
+                                let linesDifference = quantity - lines.length;
+                                if(linesDifference == 0){return null;}
+                                if(linesDifference > 0){quantity = linesDifference;}
+                                else{
+                                    for(linesDifference; linesDifference != 0; linesDifference++){
+                                        reducedCurrent = `${lines[Math.abs(linesDifference) - 1]}\n${reducedCurrent}`;
+                                    }
+                                }
                             }
                             recordObj.setValue({
                                 fieldId: 'custbody_serial_number_prefix',
-                                value: `${currentSerials}${makeSerials(quantity, prefix)}`,
+                                value: reducedCurrent != '' ? `${currentSerials}${makeSerials(quantity, prefix)}` : reducedCurrent,
                                 ignoreFieldChange: true
                             });
                         }
-                        //Do nothing unless both fields are complete
+                        //Do nothing if both fields are incomplete.
                     }
                     catch (e) {
                         //Refactor Testing
