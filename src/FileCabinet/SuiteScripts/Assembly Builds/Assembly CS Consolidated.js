@@ -91,7 +91,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                             else {
                                 currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
                                 let lines = currentSerials.split(/\r?\n/);
-                                let linesDifference = -((lines.length - 1) - quantity);
+                                let linesDifference = -((lines.length - 1) - quantity) >= 0 ? -((lines.length - 1) - quantity) : -quantity;
                                 if(linesDifference == 0){return null;}
                                 if(linesDifference > 0){quantity = linesDifference;}
                                 else{
