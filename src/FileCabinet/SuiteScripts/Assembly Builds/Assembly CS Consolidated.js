@@ -90,8 +90,8 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                             }
                             else {
                                 currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
-                                let lines = currentSerials.split(/'\n/);
-                                let linesDifference = quantity - lines.length;
+                                let lines = currentSerials.split(/\n/);
+                                let linesDifference = -((lines.length - 1) - quantity);
                                 if(linesDifference == 0){return null;}
                                 if(linesDifference > 0){quantity = linesDifference;}
                                 else{
@@ -157,8 +157,6 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
          */
         function saveRecord(scriptContext) {
             try{
-                //Refactor Testing
-                debugger;
                 if(scriptContext.currentRecord.getValue({fieldId: 'custbody_serial_verified'})){
                     return true;
                 }
