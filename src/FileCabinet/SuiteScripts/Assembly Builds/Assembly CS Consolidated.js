@@ -90,7 +90,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                             }
                             else {
                                 currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
-                                let lines = currentSerials.split(/\n/);
+                                let lines = currentSerials.split(/\r?\n/);
                                 let linesDifference = -((lines.length - 1) - quantity);
                                 if(linesDifference == 0){return null;}
                                 if(linesDifference > 0){quantity = linesDifference;}
@@ -102,7 +102,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                             }
                             recordObj.setValue({
                                 fieldId: 'custbody_serial_number_prefix',
-                                value: reducedCurrent != '' ? `${currentSerials}${makeSerials(quantity, prefix)}` : reducedCurrent,
+                                value: !reducedCurrent ? `${currentSerials}${makeSerials(quantity, prefix)}` : reducedCurrent,
                                 ignoreFieldChange: true
                             });
                         }
