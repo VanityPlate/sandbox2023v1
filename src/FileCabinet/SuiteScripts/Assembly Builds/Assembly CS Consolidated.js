@@ -38,6 +38,36 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
         }
 
         /**
+         * Function to confirm serial number is valid, recalculates to find a new serial number and returns suffix that works
+         * @param {number} suffix
+         * @return {number}
+         */
+        let setSuffix = (suffix) => {
+            try{
+                do{
+                    let filters =   [
+                        ["inventorynumber.inventorynumber","is",suffix]
+                    ];
+                    let inUse = search.create({
+                        type: search.Type.INVENTORY_DETAIL,
+                        filters: filters
+                    }).run().getRange({start: 0, end: 5});
+
+                    if(inUse.length <= 0){
+                        break;
+                    }
+                    else{
+                        suffix = (suffix + 7) % 1000;
+                    }
+                }while(true);
+                return suffix;
+            }
+            catch (e) {
+                throw `Critical error in setAffix: ${e}`;
+            }
+        }
+
+        /**
          * Function to generate new unused serial numbers
          * @param {int} quantity - the number of serial numbers to make
          * @param {string} prefix - the prefix for serial numbers
@@ -46,15 +76,15 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
         let makeSerials = (quantity, prefix) => {
             try{
                 let output = '';
-                for(let x = 0; x < quantity; x++){
-                    //Refactor Testing
-                    //Add serial creation logic and serial test logic
-                    output += `${prefix}${x}\n`; //Place holder logic
+                let today = new Date();
+                let suffix = Math.floor(Math.random() * 1000);
+                for(suffix; suffix <= quantity + suffix; suffix++){
+                    output += `${prefix}-${today.getMonth()+1}${today.getFullYear().toString().slice(-2)}-${setSuffix(suffix)}\n`;
                 }
                 return output;
             }
             catch (e) {
-                log.error({title: 'Critical error in makeSerials', details: e});
+                throw `Critical error in makeSerials: ${e}`;
             }
         };
 
@@ -68,7 +98,6 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
             try{
                 let promise = new Promise((resolve, reject) =>{
                     try {
-                        //Refactor Testing
                         let item = recordObj.getValue({fieldId: 'item'});
                         let quantity = recordObj.getValue({fieldId: 'quantity'});
 
