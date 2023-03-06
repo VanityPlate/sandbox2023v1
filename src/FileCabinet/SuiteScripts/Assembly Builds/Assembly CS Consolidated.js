@@ -79,7 +79,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                         throw `Critical error in setAffix: ${e}`;
                     }
                 }
-                for(suffix; suffix <= quantity; suffix++){
+                for(suffix; suffix < quantity; suffix++){
                     output += `${completePrefix}${setSuffix(suffix).toString().padStart(4, '0')}\n`;
                 }
                 return output;
