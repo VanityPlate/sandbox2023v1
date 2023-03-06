@@ -57,7 +57,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                         break;
                     }
                     else{
-                        suffix = (suffix + 7) % 1000;
+                        suffix = (suffix + 31) % 1000;
                     }
                 }while(true);
                 return suffix;
@@ -78,7 +78,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                 let output = '';
                 let today = new Date();
                 let suffix = Math.floor(Math.random() * 1000);
-                for(suffix; suffix <= quantity + suffix; suffix++){
+                for(suffix; suffix >= (quantity + suffix); suffix++){
                     output += `${prefix}-${today.getMonth()+1}${today.getFullYear().toString().slice(-2)}-${setSuffix(suffix)}\n`;
                 }
                 return output;
