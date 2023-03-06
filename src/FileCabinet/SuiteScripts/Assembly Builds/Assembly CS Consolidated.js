@@ -38,36 +38,6 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
         }
 
         /**
-         * Function to confirm serial number is valid, recalculates to find a new serial number and returns suffix that works
-         * @param {number} suffix
-         * @return {number}
-         */
-        let setSuffix = (suffix) => {
-            try{
-                do{
-                    let filters =   [
-                        ["inventorynumber.inventorynumber","is",suffix]
-                    ];
-                    let inUse = search.create({
-                        type: search.Type.INVENTORY_DETAIL,
-                        filters: filters
-                    }).run().getRange({start: 0, end: 5});
-
-                    if(inUse.length <= 0){
-                        break;
-                    }
-                    else{
-                        suffix = (suffix + 31) % 1000;
-                    }
-                }while(true);
-                return suffix;
-            }
-            catch (e) {
-                throw `Critical error in setAffix: ${e}`;
-            }
-        }
-
-        /**
          * Function to generate new unused serial numbers
          * @param {int} quantity - the number of serial numbers to make
          * @param {string} prefix - the prefix for serial numbers
@@ -78,9 +48,38 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                 let output = '';
                 let today = new Date();
                 let suffix = Math.floor(Math.random() * 1000);
+                let completePrefix = `${prefix}-${today.getMonth()+1}${today.getFullYear().toString().slice(-2)}-`;
+                /**
+                 * Function to confirm serial number is valid, recalculates to find a new serial number and returns suffix that works
+                 * @param {number} suffix
+                 * @return {number}
+                 */
+                let setSuffix = (suffix) => {
+                    try{
+                        do{
+                            let filters =   [
+                                ["inventorynumber.inventorynumber","is",`${completePrefix}${suffix}`]
+                            ];
+                            let inUse = search.create({
+                                type: search.Type.INVENTORY_DETAIL,
+                                filters: filters
+                            }).run().getRange({start: 0, end: 5});
+
+                            if(inUse.length <= 0){
+                                break;
+                            }
+                            else{
+                                suffix = (suffix + 31) % 1000;
+                            }
+                        }while(true);
+                        return suffix;
+                    }
+                    catch (e) {
+                        throw `Critical error in setAffix: ${e}`;
+                    }
+                }
                 for(suffix; suffix >= (quantity + suffix); suffix++){
-                    output += `${prefix}-${today.getMonth()+1}${today.getFullYear().toString().slice(-2)}-` +
-                    `${setSuffix(suffix).toString().padStart(4, '0')}\n`;
+                    output += `${completePrefix}${setSuffix(suffix).toString().padStart(4, '0')}\n`;
                 }
                 return output;
             }
