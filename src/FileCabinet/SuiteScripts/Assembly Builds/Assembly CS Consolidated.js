@@ -48,6 +48,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                 let output = '';
                 let today = new Date();
                 let suffix = Math.floor(Math.random() * 1000);
+                quantity += suffix;
                 let completePrefix = `${prefix}-${(today.getMonth()+1).toString().padStart(2, '0')}${today.getFullYear().toString().slice(-2)}-`;
                 /**
                  * Function to confirm serial number is valid, recalculates to find a new serial number and returns suffix that works
@@ -78,7 +79,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                         throw `Critical error in setAffix: ${e}`;
                     }
                 }
-                for(suffix; suffix <= (quantity + suffix); suffix++){
+                for(suffix; suffix <= quantity; suffix++){
                     output += `${completePrefix}${setSuffix(suffix).toString().padStart(4, '0')}\n`;
                 }
                 return output;
