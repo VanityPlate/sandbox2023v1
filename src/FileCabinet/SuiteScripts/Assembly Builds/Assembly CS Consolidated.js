@@ -79,7 +79,8 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                 let today = new Date();
                 let suffix = Math.floor(Math.random() * 1000);
                 for(suffix; suffix >= (quantity + suffix); suffix++){
-                    output += `${prefix}-${today.getMonth()+1}${today.getFullYear().toString().slice(-2)}-${setSuffix(suffix).toString().padStart(4, '0')}\n`;
+                    output += `${prefix}-${today.getMonth()+1}${today.getFullYear().toString().slice(-2)}-` +
+                    `${setSuffix(suffix).toString().padStart(4, '0')}\n`;
                 }
                 return output;
             }
