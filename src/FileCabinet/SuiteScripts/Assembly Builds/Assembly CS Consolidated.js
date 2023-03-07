@@ -47,7 +47,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
             try{
                 let output = '';
                 let today = new Date();
-                let suffix = Math.floor(Math.random() * 1000);
+                let suffix = Math.floor(Math.random() * 100);
                 quantity += suffix;
                 let completePrefix = `${prefix}-${(today.getMonth()+1).toString().padStart(2, '0')}${today.getFullYear().toString().slice(-2)}-`;
                 /**
@@ -70,7 +70,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                                 break;
                             }
                             else{
-                                suffix = (suffix + 31) % 1000;
+                                suffix = (suffix + 31) % 100;
                             }
                         }while(true);
                         return suffix;
@@ -80,7 +80,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                     }
                 }
                 for(suffix; suffix < quantity; suffix++){
-                    output += `${completePrefix}${setSuffix(suffix).toString().padStart(4, '0')}\n`;
+                    output += `${completePrefix}${setSuffix(suffix).toString().padStart(3, '0')}\n`;
                 }
                 return output;
             }
