@@ -70,7 +70,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                                 break;
                             }
                             else{
-                                suffix = (suffix + 31) % 100;
+                                suffix = (suffix + 31) % 1000;
                             }
                         }while(true);
                         return suffix;
