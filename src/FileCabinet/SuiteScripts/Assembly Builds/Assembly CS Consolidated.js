@@ -47,7 +47,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
             try{
                 let output = '';
                 let today = new Date();
-                let suffix = Math.floor(Math.random() * 100);
+                let suffix = Math.floor(Math.random() * 1000);
                 quantity += suffix;
                 let completePrefix = `${prefix}-${(today.getMonth()+1).toString().padStart(2, '0')}${today.getFullYear().toString().slice(-2)}-`;
                 /**
