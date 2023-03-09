@@ -164,10 +164,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
          */
         function fieldChanged(scriptContext) {
             try{
-                if(scriptContext.fieldId == 'item'){
-                    fillSerialNumbers(scriptContext.currentRecord, scriptContext.fieldId);
-                }
-                if(scriptContext.fieldId == "quantity"){
+                if(scriptContext.sublistId  == null && (scriptContext.fieldId == "quantity" || scriptContext.fieldId == 'item')){
                     fillSerialNumbers(scriptContext.currentRecord, scriptContext.fieldId);
                 }
             }
