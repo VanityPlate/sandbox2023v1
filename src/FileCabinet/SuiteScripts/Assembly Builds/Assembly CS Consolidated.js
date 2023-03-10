@@ -9,7 +9,11 @@
  * @NScriptType ClientScript
  * @NModuleScope SameAccount
  */
-define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
+define(['N/currentRecord',
+                    'N/log',
+                    'N/record',
+                    'N/search',
+                    'N/ui/message'],
     /**
      * @param{currentRecord} currentRecord
      * @param{log} log
@@ -20,7 +24,7 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
              log,
              record,
              search,
-             dialog) {
+             message) {
 
         /**
          * Defines script that fires when record is first loaded
@@ -97,86 +101,45 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
         /**
          * Function to generate promise to create and fill serial numbers
          * @param {Record} recordObj - the current record
-         * @param {string} fieldChanged - the field that was updated
-         * @return {function} promise that handles serial number generation
+         * @return {boolean} true - save record, false - do not save record
          */
-        let fillSerialNumbers = (recordObj, fieldChanged) => {
+        let fillSerialNumbers = (recordObj) => {
             try{
-                let promise = new Promise((resolve, reject) =>{
-                    try {
-                        let item = recordObj.getValue({fieldId: 'item'});
-                        let quantity = recordObj.getValue({fieldId: 'quantity'});
+                let item = recordObj.getValue({fieldId: 'item'});
+                let quantity = recordObj.getValue({fieldId: 'quantity'});
 
-                        if(item != '' && quantity != '') {
-                            let currentSerials, prefix, reducedCurrent = '';
-                            prefix = search.lookupFields({
-                                type: search.Type.ITEM,
-                                id: item,
-                                columns: ['custitem_hm_prefix_serialized']
-                            }).custitem_hm_prefix_serialized;
-                            if(prefix == ''){
-                                recordObj.setValue({fieldId: 'custbody_serial_number_prefix', value: 'No set prefix.', ignoreFieldChange: true});
-                                return null;
-                            }
-                            if(fieldChanged == 'item'){
-                                currentSerials = '';
-                                recordObj.setValue({fieldId: 'custbody_serial_number_prefix', value: '', ignoreFieldChange: true});
-                                quantity = recordObj.getValue({fieldId: 'quantity'});
-                            }
-                            else {
-                                currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
-                                let lines = currentSerials.split(/\r?\n/);
-                                let linesDifference = -((lines.length - 1) - quantity) >= 0 ? -((lines.length - 1) - quantity) : -quantity;
-                                if(linesDifference == 0){return null;}
-                                if(linesDifference > 0){quantity = linesDifference;}
-                                else{
-                                    for(linesDifference; linesDifference != 0; linesDifference++){
-                                        reducedCurrent = `${lines[Math.abs(linesDifference) - 1]}\n${reducedCurrent}`;
-                                    }
-                                }
-                            }
-                            recordObj.setValue({
-                                fieldId: 'custbody_serial_number_prefix',
-                                value: !reducedCurrent ? `${currentSerials}${makeSerials(quantity, prefix)}` : reducedCurrent,
-                                ignoreFieldChange: true
-                            });
-                        }
-                        //Do nothing if both fields are incomplete.
+                if(item != '' && quantity != '') {
+                    let prefix = search.lookupFields({
+                        type: search.Type.ITEM,
+                        id: item,
+                        columns: ['custitem_hm_prefix_serialized']
+                    }).custitem_hm_prefix_serialized;
+                    if(prefix == ''){
+                        recordObj.setValue({fieldId: 'custbody_serial_number_prefix', value: 'No set prefix.', ignoreFieldChange: true});
+                        return true; //no prefix suggest not a serialized assembly
                     }
-                    catch (e) {
-                        //Refactor Testing
-                        reject(console.log(`Error in promise:  + ${e}`));
-                    }
-                });
-                return promise;
+                    recordObj.setValue({
+                        fieldId: 'custbody_serial_number_prefix',
+                        value: makeSerials(quantity, prefix),
+                        ignoreFieldChange: true
+                    });
+                    return true;
+                }
+                else{
+                    let alertMessage = message.create({
+                        title: 'Incomplete Fields',
+                        type: message.Type.WARNING,
+                        message: 'Complete the required fields Assembly and Quantity to Build.'
+                    });
+                    alertMessage.show({duration: 10000});
+                    return false;
+                }
             }
             catch (e) {
                 log.error({title: 'Critical error in fillSerialNumbers', details: e});
             };
         };
 
-        /**
-         * Function to be executed when field is changed.
-         *
-         * @param {Object} scriptContext
-         * @param {Record} scriptContext.currentRecord - Current form record
-         * @param {string} scriptContext.sublistId - Sublist name
-         * @param {string} scriptContext.fieldId - Field name
-         * @param {number} scriptContext.lineNum - Line number. Will be undefined if not a sublist or matrix field
-         * @param {number} scriptContext.columnNum - Line number. Will be undefined if not a matrix field
-         *
-         * @since 2015.2
-         */
-        function fieldChanged(scriptContext) {
-            try{
-                if(scriptContext.sublistId  == null && (scriptContext.fieldId == "quantity" || scriptContext.fieldId == 'item')){
-                    fillSerialNumbers(scriptContext.currentRecord, scriptContext.fieldId);
-                }
-            }
-            catch (e) {
-                log.error({title: 'Critical error in fieldChanged', details: e});
-            }
-        }
 
         /**
          * Validation function to be executed when record is saved.
@@ -189,6 +152,15 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
          */
         function saveRecord(scriptContext) {
             try{
+
+                let canSave = true;
+
+                if(scriptContext.currentRecord.getValue({fieldId: 'custbody_serial_number_prefix'}) ==  ''){
+                    canSave = canSave == false ? canSave : fillSerialNumbers(scriptContext.currentRecord);
+                }
+
+                return canSave;
+
                 if(scriptContext.currentRecord.getValue({fieldId: 'custbody_serial_verified'})){
                     return true;
                 }
@@ -248,6 +220,5 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
         return {
             saveRecord: saveRecord,
             pageInit: pageInit,
-            fieldChanged: fieldChanged,
         };
     });
