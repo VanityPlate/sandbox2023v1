@@ -36,6 +36,7 @@ define(['N/currentRecord',
                     context.currentRecord.setValue({fieldId: 'location', value: 8});
                 }
                 else if(context.mode != 'create'){
+                    //Do not alter without consideration for serial # creation's reliance on these values
                     let recordObj = currentRecord.get();
                     recordObj.getField({fieldId: 'quantity'}).isDisabled = true;
                     recordObj.getField({fieldId: 'item'}).isDisabled = true;
@@ -137,9 +138,40 @@ define(['N/currentRecord',
             }
             catch (e) {
                 log.error({title: 'Critical error in fillSerialNumbers', details: e});
-            };
+                return false;
+            }
         };
 
+        /**
+         * Defines function that sets the inventory detail on an assembly
+         * @param {Record} recordObj - the current record
+         * @return {boolean} - true if save can continue and false otherwise
+         */
+        let setSerials = (recordObj) => {
+            try{
+                //Retrieving the sub-record
+                let invDetails = scriptContext.currentRecord.getSubrecord({fieldId: 'inventorydetail'});
+
+                //No serial numbers to test against allowing save.
+                if (invDetails === 'F'){
+                    scriptContext.currentRecord.setValue({fieldId: 'custbody_serial_verified', value: true});
+                    return true;
+                }
+                let currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
+                let serialNumbers = currentSerials.split(/\r?\n/);
+
+                for(let x = 0; x < serialNumbers.length; x++){
+                    invDetails.selectNewLine({sublistId: 'inventoryassignment'});
+                    invDetails.setCurrentSublistValue({sublistId: 'inventoryassignment', fieldId: 'receiptinventorynumber',
+                                                        value: serialNumbers[x], ignoreFieldChange: true});
+                    invDetails.commitLine({sublistId: 'inventoryassignment'});
+                }
+            }
+            catch (e) {
+                log.error({title: 'Critical error in setSerials', details : e});
+                return false;
+            }
+        }
 
         /**
          * Validation function to be executed when record is saved.
@@ -155,62 +187,16 @@ define(['N/currentRecord',
 
                 let canSave = true;
 
-                if(scriptContext.currentRecord.getValue({fieldId: 'custbody_serial_number_prefix'}) ==  ''){
+                if(scriptContext.currentRecord.getField({fieldId: 'item'}).isDisabled != true){
+                    scriptContext.currentRecord.setValue({fieldId: 'custbody_serial_number_prefix', value: '', ignoreFieldChange: true});
                     canSave = canSave == false ? canSave : fillSerialNumbers(scriptContext.currentRecord);
+                    let testToSet = scriptContext.currentRecord.getValue({fieldId: 'custbody_serial_number_prefix'});
+                    if(testToSet !== 'No set prefix.'){
+                        canSave = canSave == false ? canSave : setSerials(scriptContext.currentRecord);
+                    }
                 }
 
                 return canSave;
-
-                if(scriptContext.currentRecord.getValue({fieldId: 'custbody_serial_verified'})){
-                    return true;
-                }
-
-                //Retrieving the sub-record to check its serial numbers
-                var invDetails = scriptContext.currentRecord.getValue({fieldId: 'inventorydetailreq'});
-
-                //No serial numbers to test against allowing save.
-                if (invDetails === 'F'){
-                    scriptContext.currentRecord.setValue({fieldId: 'custbody_serial_verified', value: true});
-                    return true;
-                }
-
-                //Array for holding duplicate serial numbers
-                var duplicates = [": "];
-
-                //Iterating though the sublist on the sub-record checking that the serial number has not been used
-                //previously
-                invDetails = scriptContext.currentRecord.getSubrecord({fieldId: 'inventorydetail'});
-                var lines = invDetails.getLineCount({sublistId: 'inventoryassignment'});
-                for(var x = 0; x < lines; ++x){
-                    //retrieving the current serial number
-                    invDetails.selectLine({sublistId: 'inventoryassignment', line: x});
-                    var serialNumber = invDetails.getCurrentSublistValue(
-                        {sublistId: 'inventoryassignment', fieldId: 'receiptinventorynumber'});
-
-                    //creating and running a search to see if the current serial number is already in use
-                    var filters =   [
-                        ["inventorynumber.inventorynumber","is",serialNumber]
-                    ];
-                    var inUse = search.create({
-                        type: search.Type.INVENTORY_DETAIL,
-                        filters: filters
-                    }).run().getRange({start: 0, end: 5});
-
-                    //If there are any results add the duplicate serial number to alert user
-                    if(inUse.length>1){
-                        duplicates.push(serialNumber);
-                    }
-                }
-                //if duplicates has more than the initial variable alert the user and return false to stop the save
-                //otherwise return true to allow the saving of the Assembly Build
-                if(duplicates.length > 1){
-                    dialog.alert({title: "SAVE FAILED!", message: "The following Serial#s are duplicates" + duplicates}).then(success).catch(failure);
-                    return false;
-                }
-                else{
-                    scriptContext.currentRecord.setValue({fieldId: 'custbody_serial_verified', value: true});
-                    return true;
-                }
             }
             catch(error){
                 log.audit({title: "Critical Error in saveRecord", details: error});
