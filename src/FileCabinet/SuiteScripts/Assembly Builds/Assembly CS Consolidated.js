@@ -32,8 +32,9 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                     context.currentRecord.setValue({fieldId: 'location', value: 8});
                 }
                 else if(context.mode != 'create'){
-                    context.getField({fieldId: 'quantity'}).isDisabled = true;
-                    context.getField({fieldId: 'item'}).isDisabled = true;
+                    let recordObj = currentRecord.get();
+                    recordObj.getField({fieldId: 'quantity'}).isDisabled = true;
+                    recordObj.getField({fieldId: 'item'}).isDisabled = true;
                 }
             }
             catch (e) {
