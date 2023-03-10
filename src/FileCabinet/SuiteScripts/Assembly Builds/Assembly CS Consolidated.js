@@ -31,6 +31,10 @@ define(['N/currentRecord', 'N/log', 'N/record', 'N/search', 'N/ui/dialog'],
                 if(context.mode == 'create'){
                     context.currentRecord.setValue({fieldId: 'location', value: 8});
                 }
+                else if(context.mode != 'create'){
+                    context.getField({fieldId: 'quantity'}).isDisabled = true;
+                    context.getField({fieldId: 'item'}).isDisabled = true;
+                }
             }
             catch (e) {
                 log.error({title: 'Critical error in pageInit', details: e});
