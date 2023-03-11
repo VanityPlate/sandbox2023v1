@@ -150,11 +150,11 @@ define(['N/currentRecord',
         let setSerials = (recordObj) => {
             try{
                 //Retrieving the sub-record
-                let invDetails = scriptContext.currentRecord.getSubrecord({fieldId: 'inventorydetail'});
+                let invDetails = recordObj.getSubrecord({fieldId: 'inventorydetail'});
 
                 //No serial numbers to test against allowing save.
                 if (invDetails === 'F'){
-                    scriptContext.currentRecord.setValue({fieldId: 'custbody_serial_verified', value: true});
+                    recordObj.setValue({fieldId: 'custbody_serial_verified', value: true});
                     return true;
                 }
                 let currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
