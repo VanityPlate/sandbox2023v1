@@ -152,15 +152,10 @@ define(['N/currentRecord',
                 //Retrieving the sub-record
                 let invDetails = recordObj.getSubrecord({fieldId: 'inventorydetail'});
 
-                //No serial numbers to test against allowing save.
-                if (invDetails === 'F'){
-                    recordObj.setValue({fieldId: 'custbody_serial_verified', value: true});
-                    return true;
-                }
                 let currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
                 let serialNumbers = currentSerials.split(/\r?\n/);
 
-                for(let x = 0; x < serialNumbers.length; x++){
+                for(let x = 0; x < (serialNumbers.length - 1); x++){
                     invDetails.selectNewLine({sublistId: 'inventoryassignment'});
                     invDetails.setCurrentSublistValue({sublistId: 'inventoryassignment', fieldId: 'receiptinventorynumber',
                                                         value: serialNumbers[x], ignoreFieldChange: true});
