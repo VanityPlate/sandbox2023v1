@@ -158,12 +158,9 @@ define(['N/currentRecord',
                 let inventoryDetails = record.create({type: record.Type.INVENTORY_DETAIL});
 
                 for(let x = 0; x < (serialNumbers.length - 1); x++){
-                    inventoryDetails.selectNewLine({sublistId: 'inventoryassignment'});
-                    inventoryDetails.setCurrentSublistValue({sublistId: 'inventoryassignment', fieldId: 'receiptinventorynumber',
-                                                        value: serialNumbers[x], ignoreFieldChange: true});
-                    inventoryDetails.setCurrentSublistValue({sublistId: 'inventoryassignment', fieldId: 'quantity',
-                        value: 1, ignoreFieldChange: true});
-                    inventoryDetails.commitLine({sublistId: 'inventoryassignment'});
+                    inventoryDetails.insertLine({sublistId: 'inventoryassignment', line: 0});
+                    inventoryDetails.setSublistValue({sublistId: 'inventoryassignment', fieldId: 'receiptinventorynumber',
+                                                        value: serialNumbers[x], line: 0, ignoreFieldChange: true});
                 }
 
                 inventoryDetails = inventoryDetails.save();
