@@ -150,17 +150,24 @@ define(['N/currentRecord',
         let setSerials = (recordObj) => {
             try{
                 //Retrieving the sub-record
-                let invDetails = recordObj.getSubrecord({fieldId: 'inventorydetail'});
+                //let invDetails = recordObj.getSubrecord({fieldId: 'inventorydetail'});
 
                 let currentSerials = recordObj.getValue({fieldId: 'custbody_serial_number_prefix'});
                 let serialNumbers = currentSerials.split(/\r?\n/);
 
+                let inventoryDetails = record.create({type: record.Type.INVENTORY_DETAIL});
+
                 for(let x = 0; x < (serialNumbers.length - 1); x++){
-                    invDetails.selectNewLine({sublistId: 'inventoryassignment'});
-                    invDetails.setCurrentSublistValue({sublistId: 'inventoryassignment', fieldId: 'receiptinventorynumber',
+                    inventoryDetails.selectNewLine({sublistId: 'inventoryassignment'});
+                    inventoryDetails.setCurrentSublistValue({sublistId: 'inventoryassignment', fieldId: 'receiptinventorynumber',
                                                         value: serialNumbers[x], ignoreFieldChange: true});
-                    invDetails.commitLine({sublistId: 'inventoryassignment'});
+                    inventoryDetails.setCurrentSublistValue({sublistId: 'inventoryassignment', fieldId: 'quantity',
+                        value: 1, ignoreFieldChange: true});
+                    inventoryDetails.commitLine({sublistId: 'inventoryassignment'});
                 }
+
+                inventoryDetails = inventoryDetails.save();
+                recordObj.setValue({fieldId: 'inventorydetail', value: inventoryDetails, ignoreFieldChange: true});
             }
             catch (e) {
                 log.error({title: 'Critical error in setSerials', details : e});
