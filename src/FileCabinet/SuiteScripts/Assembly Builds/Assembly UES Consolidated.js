@@ -21,7 +21,7 @@ define(['N/ui/serverWidget'],
         const beforeLoad = (scriptContext) => {
                 try{
                         scriptContext.form.addButton({
-                                id: 'custbody_serial_button',
+                                id: 'custpage_serial_button',
                                 label: 'Generate Serial(s)',
                                 functionName: 'fillSerialNumbers'
                         });
