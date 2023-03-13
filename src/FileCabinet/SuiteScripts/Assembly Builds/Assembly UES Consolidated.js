@@ -6,9 +6,9 @@
  * @NApiVersion 2.1
  * @NScriptType UserEventScript
  */
-define([],
+define(['N/ui/serverWidget'],
     
-    () => {
+    (sWidget) => {
         /**
          * Defines the function definition that is executed before record is loaded.
          * @param {Object} scriptContext
@@ -19,7 +19,17 @@ define([],
          * @since 2015.2
          */
         const beforeLoad = (scriptContext) => {
-
+                try{
+                        scriptContext.form.addButton({
+                                id: 'custbody_serial_button',
+                                labe: 'Generate Serial(s)',
+                                functionName: 'fillSerialNumbers'
+                        });
+                        scriptContext.form.clientScriptModulePath = 'SuiteScripts/Assembly Builds/Assembly CS Consolidated.js';
+                }
+                catch (e) {
+                      log.error({title: 'Critical error in scriptContext', details: e});
+                }
         }
 
         /**
@@ -51,6 +61,6 @@ define([],
                 }
         }
 
-        return {afterSubmit}
+        return {beforeLoad}
 
     });
