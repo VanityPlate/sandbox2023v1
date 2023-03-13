@@ -212,5 +212,6 @@ define(['N/currentRecord',
         return {
             saveRecord: saveRecord,
             pageInit: pageInit,
+            fillSerialNumbers: fillSerialNumbers,
         };
     });
