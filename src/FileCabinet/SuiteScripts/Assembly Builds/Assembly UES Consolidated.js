@@ -20,12 +20,19 @@ define(['N/ui/serverWidget'],
          */
         const beforeLoad = (scriptContext) => {
                 try{
-                        scriptContext.form.addButton({
-                                id: 'custpage_serial_button',
-                                label: 'Generate Serial(s)',
-                                functionName: 'fillSerialNumbers'
-                        });
-                        scriptContext.form.clientScriptModulePath = 'SuiteScripts/Assembly Builds/Assembly CS Consolidated.js';
+                        if(scriptContext.type == 'CREATE'){
+                                scriptContext.form.addButton({
+                                        id: 'custpage_serial_button',
+                                        label: 'Generate Serial(s)',
+                                        functionName: 'fillSerialNumbers'
+                                });
+                                scriptContext.form.clientScriptModulePath = 'SuiteScripts/Assembly Builds/Assembly CS Consolidated.js';
+                        }
+                        else{
+                                scriptContext.form.removeButton({
+                                        id: 'custpage_serial_button'
+                                });
+                        }
                 }
                 catch (e) {
                       log.error({title: 'Critical error in scriptContext', details: e});
