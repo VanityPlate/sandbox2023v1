@@ -101,11 +101,11 @@ define(['N/currentRecord',
 
         /**
          * Function to generate promise to create and fill serial numbers
-         * @param {Record} recordObj - the current record
-         * @return {boolean} true - save record, false - do not save record
          */
-        let fillSerialNumbers = (recordObj) => {
+        let fillSerialNumbers = () => {
             try{
+                let recordObj = currentRecord.get();
+
                 let item = recordObj.getValue({fieldId: 'item'});
                 let quantity = recordObj.getValue({fieldId: 'quantity'});
 
