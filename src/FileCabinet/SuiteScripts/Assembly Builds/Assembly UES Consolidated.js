@@ -22,7 +22,7 @@ define(['N/ui/serverWidget'],
                 try{
                         scriptContext.form.addButton({
                                 id: 'custbody_serial_button',
-                                labe: 'Generate Serial(s)',
+                                label: 'Generate Serial(s)',
                                 functionName: 'fillSerialNumbers'
                         });
                         scriptContext.form.clientScriptModulePath = 'SuiteScripts/Assembly Builds/Assembly CS Consolidated.js';
