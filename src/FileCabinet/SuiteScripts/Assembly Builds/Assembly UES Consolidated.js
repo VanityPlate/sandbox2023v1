@@ -20,7 +20,7 @@ define(['N/ui/serverWidget'],
          */
         const beforeLoad = (scriptContext) => {
                 try{
-                        if(scriptContext.type == 'CREATE'){
+                        if(scriptContext.type == 'create'){
                                 scriptContext.form.addButton({
                                         id: 'custpage_serial_button',
                                         label: 'Generate Serial(s)',
