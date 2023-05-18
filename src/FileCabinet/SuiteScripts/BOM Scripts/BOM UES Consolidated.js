@@ -21,7 +21,7 @@ define(['N/record',
          */
         const beforeLoad = (scriptContext) => {
                 try{
-                     let listToAdd = record.getSubList({sublistId: 'component'});
+                     let listToAdd = scriptContext.newRecord.getSubList({sublistId: 'component'});
                      listToAdd.addField({id: 'quantityOnHand', label: 'On Hand', type: 'INTEGER'});
                 }
                 catch (e) {
