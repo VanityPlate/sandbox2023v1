@@ -36,7 +36,7 @@ function(search) {
                             recordObj.commitLine({sublistId: 'component'});
                         }
                     });
-                }
+                };
                 addOH(scriptContext.currentRecord);
             }
         }
