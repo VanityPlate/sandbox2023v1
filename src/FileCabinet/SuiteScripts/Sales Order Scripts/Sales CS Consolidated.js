@@ -7,6 +7,7 @@
  *@update - 6/24/2022 removed setting of list price-stored
  *@update - 6/28/2022 removed setting of expected ship date logic in validate line. We no longer send POs to fuller plastics
  *@update - 10/31/2022 added logic to check PO when copied to clear acknowledge email field and not interrupt automatic email
+ *@update - 6/5/2023 adding button to handle inventory detail issue preventing shipment
  *
  * @NApiVersion 2.1
  * @NScriptType ClientScript
@@ -193,6 +194,20 @@ function(sAlert,
      */
     function validateField(scriptContext) {
 
+    }
+
+    /**
+     * Defines function for handling inventory detail issue that is preventing shipping
+     * @param{Object}scriptContext
+     * @return{boolean}
+     */
+    let clearIDS = () => {
+        try{
+
+        }
+        catch (e) {
+            log.error({title: 'Critical error in clearIDS', details: e});
+        }
     }
 
     /**
@@ -396,6 +411,10 @@ function(sAlert,
     }
 
     /**
+     *
+     */
+
+    /**
      * Checks for duplicate customer po if found alerts user
      * @param{Object} scriptContext
      * @return{boolean}
@@ -509,7 +528,8 @@ function(sAlert,
         validateLine: validateLine,
         //validateInsert: validateInsert,
         //validateDelete: validateDelete,
-        saveRecord: saveRecord
+        saveRecord: saveRecord,
+        clearIDS: clearIDS
     };
     
 });

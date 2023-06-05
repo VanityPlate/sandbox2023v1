@@ -4,6 +4,7 @@
  * HydraMaster LLC
  *
  * @update 2/29/2022 adding logic for ready to ship, refactor afterSubmit
+ * @update - 6/5/2023 adding button to handle inventory detail issue preventing shipment
  *
  * @NApiVersion 2.1
  * @NScriptType UserEventScript
@@ -21,7 +22,19 @@ define(["N/search", 'N/runtime', 'SuiteScripts/Shipping/Shipping Lib.js'],
          * @since 2015.2
          */
         const beforeLoad = (scriptContext) => {
-
+            try{
+                if(scriptContext.type == 'view' &&
+                    (scriptContext.newRecord.getValue({fieldId: 'status'}) == 'pendingFulfillment')){
+                    scriptContext.form.addButton({
+                        id: 'custpage_clear_id',
+                        label: 'Clear IDs',
+                        functionName: 'clearIDS'
+                    });
+                    scriptContext.form.clientScriptModulePath = 'SuiteScripts/Sales Order Scripts/Sales CS Consolidated.js';
+                }
+            }catch (e) {
+                log.error({title: 'Critical error in beforeLoad', details: e});
+            }
         }
 
             /**
@@ -301,6 +314,6 @@ define(["N/search", 'N/runtime', 'SuiteScripts/Shipping/Shipping Lib.js'],
                 }
         }
 
-        return {beforeSubmit, afterSubmit}
+        return {beforeLoad, beforeSubmit, afterSubmit}
 
     });
