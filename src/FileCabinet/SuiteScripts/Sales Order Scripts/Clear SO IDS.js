@@ -6,9 +6,9 @@
  * @NApiVersion 2.1
  * @NScriptType Suitelet
  */
-define([],
+define(['N/record'],
     
-    () => {
+    (record) => {
         /**
          * Defines the Suitelet script trigger point.
          * @param {Object} scriptContext
