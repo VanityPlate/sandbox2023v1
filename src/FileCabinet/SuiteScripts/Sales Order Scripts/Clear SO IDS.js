@@ -22,7 +22,8 @@ define(['N/record'],
                     let recID = context.request.parameters['custscript_recid'];
                     let salesOBJ = record.load({
                         type: record.Type.SALES_ORDER,
-                        id: recID
+                        id: recID,
+                        isDynamic: 'false'
                     });
 
                     //Refactor Testing
@@ -30,7 +31,10 @@ define(['N/record'],
 
                     let items = salesOBJ.getLineCount({sublistId: 'item'});
                     for (let x = 0; x < items; x++) {
+
+                        //Refactor Testing
                         log.audit({title: 'Test SubRecord', details: salesOBJ.hasSublistSubrecord({sublistId: 'item', fieldId: 'inventorydetail', line: x})});
+
                         if(salesOBJ.hasSublistSubrecord({sublistId: 'item', fieldId: 'inventorydetail', line: x})){
                             salesOBJ.removeSubrecord({sublistId: 'item', fieldId: 'inventorydetail', line: x});
                         }
