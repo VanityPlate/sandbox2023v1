@@ -6,9 +6,11 @@
  * @NApiVersion 2.1
  * @NScriptType Suitelet
  */
-define(['N/record'],
+define(['N/record',
+                    'N/currentRecord'],
     
-    (record) => {
+    (record,
+            currentRecord) => {
         /**
          * Defines the Suitelet script trigger point.
          * @param {Object} scriptContext
@@ -23,7 +25,7 @@ define(['N/record'],
                     let salesOBJ = record.load({
                         type: record.Type.SALES_ORDER,
                         id: recID,
-                        isDynamic: 'false'
+                        isDynamic: 'true'
                     });
 
                     //Refactor Testing
@@ -36,7 +38,9 @@ define(['N/record'],
                         log.audit({title: 'Test SubRecord', details: salesOBJ.hasSublistSubrecord({sublistId: 'item', fieldId: 'inventorydetail', line: x})});
 
                         if(salesOBJ.hasSublistSubrecord({sublistId: 'item', fieldId: 'inventorydetail', line: x})){
-                            salesOBJ.removeSubrecord({sublistId: 'item', fieldId: 'inventorydetail', line: x});
+                            salesOBJ.selectLine({sublistId: 'item', line: x});
+                            salesOBJ.removeCurrentSublistSubrecord({sublistId: 'item', fieldId: 'inventorydetail'});
+                            salesOBJ.commitLine({sublistId: 'item'});
                         }
                     }
 
