@@ -30,7 +30,8 @@ define(['N/record'],
 
                     let items = salesOBJ.getLineCount({sublistId: 'item'});
                     for (let x = 0; x < items; x++) {
-                        if(salesOBJ.getSublistValue({sublistId: 'item', fieldId: 'inventorydetailavail', line: x}) == 'T'){
+                        log.audit({title: 'Test SubRecord', details: salesOBJ.hasSublistSubrecord({sublistId: 'item', fieldId: 'inventorydetail', line: x})});
+                        if(salesOBJ.hasSublistSubrecord({sublistId: 'item', fieldId: 'inventorydetail', line: x})){
                             salesOBJ.removeSubrecord({sublistId: 'item', fieldId: 'inventorydetail', line: x});
                         }
                     }
