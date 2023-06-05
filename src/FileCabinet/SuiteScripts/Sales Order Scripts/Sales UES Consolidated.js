@@ -24,7 +24,7 @@ define(["N/search", 'N/runtime', 'SuiteScripts/Shipping/Shipping Lib.js'],
         const beforeLoad = (scriptContext) => {
             try{
                 if(scriptContext.type == 'view' &&
-                    (scriptContext.newRecord.getValue({fieldId: 'status'}) == 'pendingFulfillment')){
+                    (scriptContext.newRecord.getValue({fieldId: 'status'}) == 'Pending Fulfillment')){
                     scriptContext.form.addButton({
                         id: 'custpage_clear_id',
                         label: 'Clear IDs',
