@@ -20,7 +20,9 @@ define([ 'SuiteScripts/Help_Scripts/hm_sweet_alert_2.js',
                     'N/log',
                     'N/search',
                     'N/ui/dialog',
-                    'N/runtime'],
+                    'N/runtime',
+                    'N/url',
+                    'N/https'],
 function(sAlert,
                 errorAlert,
                 currentRecord,
@@ -28,7 +30,9 @@ function(sAlert,
                 log,
                 search,
                 dialog,
-                runtime) {
+                runtime,
+                url,
+                https) {
 
     /**
      * Globals
@@ -198,12 +202,23 @@ function(sAlert,
 
     /**
      * Defines function for handling inventory detail issue that is preventing shipping
-     * @param{Object}scriptContext
      * @return{boolean}
      */
     let clearIDS = () => {
         try{
+            let recID = currentRecord.get().getValue({fieldId: 'id'});
 
+            let output = url.resolveScript({
+                deploymentId: 'customdeploy_clear_so_ids',
+                scriptId: 'customscript_clear_so_ids',
+                params: {custscript_recid: recID}
+            });
+
+            let response = https.get({
+                url: output
+            });
+
+            window.location.reload();
         }
         catch (e) {
             log.error({title: 'Critical error in clearIDS', details: e});

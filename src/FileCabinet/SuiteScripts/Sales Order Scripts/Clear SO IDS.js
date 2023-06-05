@@ -16,8 +16,31 @@ define([],
          * @param {ServerResponse} scriptContext.response - Suitelet response
          * @since 2015.2
          */
-        const onRequest = (scriptContext) => {
+        const onRequest = (context) => {
+            try{
+                if(context.request.method === 'GET') {
+                    let recID = context.request.parameters['custscript_recid'];
+                    let salesOBJ = record.load({
+                        type: record.Type.SALES_ORDER,
+                        id: recID
+                    });
 
+                    //Refactor Testing
+                    log.audit({title: 'Testing fire', details: `FIRED${recID}`});
+
+                    let items = salesOBJ.getLineCount({sublistId: 'item'});
+                    for (let x = 0; x < items; x++) {
+                        if(salesOBJ.getSublistValue({sublistId: 'item', fieldId: 'inventorydetailavail'}) == 'T'){
+                            salesOBJ.removeCurrentSublistSubrecord({sublistId: 'item', fieldId: 'inventorydetail'});
+                        }
+                    }
+
+                    salesOBJ.save()
+                }
+            }
+            catch (e) {
+                log.error({title: 'Critical error in onRequest', details: e});
+            }
         }
 
         return {onRequest}
